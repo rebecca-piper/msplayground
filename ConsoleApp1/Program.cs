@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
-using System.Text;
-
+using System.Text.RegularExpressions;
+using System.Net.Mail;
 namespace sqltest
 {
     class Program
@@ -14,43 +14,73 @@ namespace sqltest
             Console.WriteLine("-----------------------------");
 
             string sName;
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
             string sEmail;
             int iNum;
             string sPostcode;
-
-            Console.WriteLine("Please enter your Full Name");
-            sName = Console.ReadLine();
-            Console.WriteLine("please enter your email");
-            sEmail = Console.ReadLine();
-            Console.WriteLine("please enter your telephone number");
-            iNum = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("please enter your postcode");
-            sPostcode = Console.ReadLine();
-
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "TOMBOLA-1665";
-                builder.InitialCatalog = "test";
-                builder.IntegratedSecurity = true;
-                builder.TrustServerCertificate = true;
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                Console.WriteLine("Please enter your Full Name");
+                sName = Console.ReadLine();
+                Console.WriteLine("please enter your email");
+                sEmail = Console.ReadLine();
+                while (!IsValidEmail(sEmail, pattern))
                 {
-                    string sql = "INSERT INTO customer (cust_name, cust_email, cust_number, cust_postcode) VALUES ('" +sName + "',' " + sEmail + "', ' " + iNum + " ' , '" + sPostcode + "')";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    Console.WriteLine("Invalid email format. Please try again");
+                    sEmail = Console.ReadLine();
+                }
+
+                Console.WriteLine("please enter your telephone number");
+
+                //bool parsedSuccessfully = int.TryParse(Console.ReadLine(), out iNum);
+
+                //    if(parsedSuccessfully == false)
+                //    {
+                //        Console.WriteLine("Please enter a number");
+
+                //    }
+
+                bool isValidInput = false;
+
+                while (!isValidInput)
+                {
+                    Console.Write("Enter an integer: ");
+                    string input = Console.ReadLine();
+
+                    if (int.TryParse(input, out iNum))
                     {
-                        connection.Open();
-                        //using (SqlDataReader reader = command.ExecuteReader())
-                        //{
-                        //    while (reader.Read())
-                        //    {
-                        //        Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetDecimal(1));
-                        //    }
-                        //}
-                        command.ExecuteNonQuery();
-                        Console.WriteLine("Successfully inserted");
+                        isValidInput = true;
+                        Console.WriteLine($"You entered: {iNum}");
+
+                        Console.WriteLine("please enter your postcode");
+                        sPostcode = Console.ReadLine();
+
+
+                        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                        builder.DataSource = "TOMBOLA-1665";
+                        builder.InitialCatalog = "test";
+                        builder.IntegratedSecurity = true;
+                        builder.TrustServerCertificate = true;
+                        using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                        {
+                            string sql = "INSERT INTO customer (cust_name, cust_email, cust_number, cust_postcode) VALUES ('" + sName + "',' " + sEmail + "', ' " + iNum + " ' , '" + sPostcode + "')";
+                            using (SqlCommand command = new SqlCommand(sql, connection))
+                            {
+                                connection.Open();
+
+                                command.ExecuteNonQuery();
+                                Console.WriteLine("Successfully inserted");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid integer.");
                     }
                 }
+
+
+
 
             }
             catch (SqlException e)
@@ -59,6 +89,12 @@ namespace sqltest
             }
 
         }
+        static bool IsValidEmail(string sEmail, string pattern)
+        {
+            return Regex.IsMatch(sEmail, pattern);
+        }
+
     }
+
 }
 
