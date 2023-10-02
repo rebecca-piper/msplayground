@@ -60,15 +60,15 @@ namespace sqltest
 
 
 
-                Console.WriteLine("please enter your email");
-                        sEmail = Console.ReadLine();
-                        vExc.EmailException(sEmail);
-                        while (!IsValidEmail(sEmail, pattern))
-                        {
-                            Console.WriteLine("Invalid email format. Please try again");
-                            sEmail = Console.ReadLine();
+                //Console.WriteLine("please enter your email");
+                //        sEmail = Console.ReadLine();
+                //        vExc.EmailException(sEmail);
+                //        while (!IsValidEmail(sEmail, pattern))
+                //        {
+                //            Console.WriteLine("Invalid email format. Please try again");
+                //            sEmail = Console.ReadLine();
 
-                        }
+                //        }
                     
                     
 

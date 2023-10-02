@@ -1,12 +1,23 @@
-﻿
-using System.Diagnostics.Metrics;
+﻿using System;
+using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 namespace LotteryGame
 {
     class Program
     {
+      public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
         static void Main(string[] args)
         {
+            Console.WriteLine("PLease enter your username");
+            var playerUsername = Console.ReadLine();
+            builder.DataSource = "TOMBOLA-1665";
+            builder.InitialCatalog = "test";
+            builder.IntegratedSecurity = true;
+            builder.TrustServerCertificate = true;
+
+            DBplayerInsert(playerUsername);
+
             Console.WriteLine("Welcome to the lottery");
             Console.WriteLine("------------------------");
             Console.WriteLine("You will be asked to enter 6 numbers.");
@@ -18,7 +29,7 @@ namespace LotteryGame
             Console.WriteLine("Lottery Numbers");
             int[] randomNumbers = GetRandomNumbers();
             int matchedNumbers = MatchingNumbers(userNumbers, randomNumbers);
-
+            
             if (matchedNumbers == 6)
             {
                 Console.WriteLine("You matched 6 numbers");
@@ -44,6 +55,7 @@ namespace LotteryGame
                 Console.WriteLine("You didn't match 3 or more numbers :(");
                 Console.WriteLine("Better luck next time");
             }
+            DBgameinsert(userNumbers, randomNumbers, playerUsername);
         }
 
         public static int[] GetUserNumbers()
@@ -154,6 +166,75 @@ namespace LotteryGame
         public static int MatchingNumbers(int[] usernumbers, int[] randomNumbers)
         {
             return usernumbers.Intersect(randomNumbers).Count();
+        }
+
+        public static void DBplayerInsert(string pPlayerusername)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    string sqlplayer = "INSERT INTO player (player_username) VALUES ('" + pPlayerusername + "')";
+                    using (SqlCommand command = new SqlCommand(sqlplayer, connection))
+                    {
+                        connection.Open();
+
+                        command.ExecuteNonQuery();
+
+                        Console.WriteLine("Successfully inserted in player");
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }
+
+        public static void DBgameinsert(int[] usernumbers, int[] randomNumbers, string pPlayerusername)
+        {
+          
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    
+               
+                    string IDquery = "SELECT player_id FROM player WHERE player_username = '" + pPlayerusername + "'";
+                    decimal playerid = 0;
+                    using (SqlCommand command = new SqlCommand(IDquery, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                playerid = reader.GetDecimal(0);
+                            }
+
+                          
+
+                        }
+                    }
+                    string sqlgame = "INSERT INTO games (player_id, ticket, player_numbers) VALUES ('" + playerid + "' ,@ticket, @playernumbers)";
+                    using (SqlCommand cmd = new SqlCommand(sqlgame, connection))
+                    {
+                        cmd.Parameters.AddWithValue("ticket", string.Join(",", randomNumbers));
+                        cmd.Parameters.AddWithValue("playernumbers", string.Join(",", usernumbers));
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Successfully inserted in game");
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
         }
     }
 }
