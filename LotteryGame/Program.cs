@@ -6,235 +6,79 @@ namespace LotteryGame
 {
     class Program
     {
-      public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
         static void Main(string[] args)
-        {
-            Console.WriteLine("PLease enter your username");
-            var playerUsername = Console.ReadLine();
-            builder.DataSource = "TOMBOLA-1665";
-            builder.InitialCatalog = "test";
-            builder.IntegratedSecurity = true;
-            builder.TrustServerCertificate = true;
-
-            DBplayerInsert(playerUsername);
-
-            Console.WriteLine("Welcome to the lottery");
-            Console.WriteLine("------------------------");
-            Console.WriteLine("You will be asked to enter 6 numbers.");
-            Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-
-            int[] userNumbers = GetUserNumbers();
-            Console.WriteLine("Numbers well received");
-            Console.WriteLine("------------------------");
-            Console.WriteLine("Lottery Numbers");
-            int[] randomNumbers = GetRandomNumbers();
-            int matchedNumbers = MatchingNumbers(userNumbers, randomNumbers);
-            
-            if (matchedNumbers == 6)
+        {         
+            var SQLclass = new SQLdata();
+            var game = new Game();
+            int prizes = 0;
+            while (true)
             {
-                Console.WriteLine("You matched 6 numbers");
-                Console.WriteLine("Congrats, you win £50!");
-            }
-            else if(matchedNumbers == 5) 
-            {
-                Console.WriteLine("You matched 5 numbers");
-                Console.WriteLine("Congrats, you win £25!");
-            }
-            else if (matchedNumbers == 4)
-            {
-                Console.WriteLine("You matched 4 numbers");
-                Console.WriteLine("Congrats, you win £10!");
-            }
-            else if (matchedNumbers == 3)
-            {
-                Console.WriteLine("You matched 3 numbers");
-                Console.WriteLine("Congrats, you win £5!");
-            }
-            else
-            {
-                Console.WriteLine("You didn't match 3 or more numbers :(");
-                Console.WriteLine("Better luck next time");
-            }
-            DBgameinsert(userNumbers, randomNumbers, playerUsername);
-        }
-
-        public static int[] GetUserNumbers()
-        {
-            Console.WriteLine("Please enter six numbers from 0-20");
-            int[] userNums = new int[6];
-            
-            for (int i = 0; i < 6; i++)
-            {
-                int userNum;
-                
-                
-                Console.WriteLine("Number:" + (i + 1));
-
-                bool isValidInput = false;
-                while (!isValidInput)
+                try
                 {
-                    string userValue = Console.ReadLine();
+                    Console.WriteLine("New game: Press 1 to play a new game");
+                    Console.WriteLine("Review games: Press 2 to review all your games");
+                    Console.WriteLine("Exit: Press any number to exit");
 
-                    if (int.TryParse(userValue, out userNum))
+                    var menuOption = Convert.ToInt32(Console.ReadLine());
+                    if (menuOption != 1 && menuOption != 2)
                     {
-                        if (userNum >= 0 && userNum <= 20 && !userNums.Contains(userNum))
-                        {
-                            userNums[i] = userNum;
-                            break;
-                        }
-                        if (userNum <= 0 || userNum >= 20)
-                        {
-                            Console.WriteLine("Number is out of range. Please enter a number between 0 and 20");
-                        }
-                        else if (userNums.Contains(userNum))
-                        {
-                            Console.WriteLine("Number already entered. Repeated numbers are not allowed. Please try again");
-                        }
-                       
+                        Environment.Exit(0);
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please enter a number betweeon 0 and 20");
-                    }
-
-                }
-
-            }
-            return userNums;
-        }
-        //public static int[] GetRandomNumbers()
-        //{
-
-        //    int Min = 0;
-        //    int Max = 20;
-
-        //    // this declares an integer array with 6 elements
-        //    // which are made of random numbers
-        //    int[] randomNumbers = new int[6];
-
-        //    Random randNum = new Random();
-        //    for (int i = 0; i < randomNumbers.Length; i++)
-        //    {
-        //         int num = randNum.Next(Min, Max);
-        //        randomNumbers[i] = Convert.ToInt32(num);
-        //        //if (!randomNumbers.Contains(Convert.ToInt32(randNum)))
-        //        //{
-        //        //    randomNumbers[i] =  Convert.ToInt32(randNum);
-        //        //}
-        //        //Console.WriteLine("");
-        //    }
-        //    foreach (var number in randomNumbers)
-        //    {
-        //        Console.WriteLine(number.ToString());
-        //    }
-        //    return randomNumbers;
-        //}
-
-        public static int[] GetRandomNumbers()
-        {
-
-            int Min = 1;
-            int Max = 20;
-            int[] randomNumbers = new int[6];
-
-            Random randNum = new Random();
-            for (int i = 0; i < randomNumbers.Length; i++)
-            {
-                int num = randNum.Next(Min, Max);
-                bool randomNumber = false;
-                while (!randomNumber)
-                {
-                    if (!randomNumbers.Contains(Convert.ToInt32(num)))
-                    {
-                        randomNumbers[i] = Convert.ToInt32(num);
-                        randomNumber = true;
-                    }
-                    else
-                    {
-                         num = randNum.Next(Min, Max);
-                    }
-                }
-                
-            }
-            foreach (var number in randomNumbers)
-            {
-                Console.WriteLine(number.ToString());
-            }
-            return randomNumbers;
-        }
-
-        public static int MatchingNumbers(int[] usernumbers, int[] randomNumbers)
-        {
-            return usernumbers.Intersect(randomNumbers).Count();
-        }
-
-        public static void DBplayerInsert(string pPlayerusername)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    string sqlplayer = "INSERT INTO player (player_username) VALUES ('" + pPlayerusername + "')";
-                    using (SqlCommand command = new SqlCommand(sqlplayer, connection))
-                    {
-                        connection.Open();
-
-                        command.ExecuteNonQuery();
-
-                        Console.WriteLine("Successfully inserted in player");
-                    }
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-        }
-
-        public static void DBgameinsert(int[] usernumbers, int[] randomNumbers, string pPlayerusername)
-        {
-          
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    
-               
-                    string IDquery = "SELECT player_id FROM player WHERE player_username = '" + pPlayerusername + "'";
-                    decimal playerid = 0;
-                    using (SqlCommand command = new SqlCommand(IDquery, connection))
-                    {
-                        connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        switch (menuOption)
                         {
+                            case 1:
+                                
 
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                playerid = reader.GetDecimal(0);
-                            }
+                                SQLclass.DBplayerInsert(SQLclass.Playerusername);
 
-                          
+                                Console.WriteLine("Welcome to the lottery");
+                                Console.WriteLine("------------------------");
+                                Console.WriteLine("You will be asked to enter 6 numbers.");
+                                Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
 
+                                int[] userNumbers = game.GetUserNumbers();
+                                Console.WriteLine("Numbers well received");
+                                Console.WriteLine("------------------------");
+                                Console.WriteLine("Lottery Numbers");
+                                int[] randomNumbers = game.GetRandomNumbers();
+                                int matchedNumbers = userNumbers.Intersect(randomNumbers).Count();
+                                game.Prizes(matchedNumbers, userNumbers, randomNumbers);
+                                SQLclass.DBgameinsert(userNumbers, randomNumbers, SQLclass.Playerusername, SQLclass.Prizes);
+                                break;
+                            case 2:
+                                Console.WriteLine("PLease enter your username");
+                                SQLclass.Playerusername = Console.ReadLine();
+
+                                SQLclass.PreviewGames(SQLclass.Playerusername);
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                Console.WriteLine("Press any key to exit");
+                                Console.ReadKey();
+                                Environment.Exit(0);
+                                break;
                         }
                     }
-                    string sqlgame = "INSERT INTO games (player_id, ticket, player_numbers) VALUES ('" + playerid + "' ,@ticket, @playernumbers)";
-                    using (SqlCommand cmd = new SqlCommand(sqlgame, connection))
-                    {
-                        cmd.Parameters.AddWithValue("ticket", string.Join(",", randomNumbers));
-                        cmd.Parameters.AddWithValue("playernumbers", string.Join(",", usernumbers));
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine("Successfully inserted in game");
-                    }
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e.ToString());
-            }
 
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+                catch (InvalidOperationException e)
+                {
+                    Console.WriteLine("Connection error" + e);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Invalid input. Please use numbers only");
+                }
+
+            }
         }
+       
     }
 }
