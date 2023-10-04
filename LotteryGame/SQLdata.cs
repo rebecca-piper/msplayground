@@ -12,8 +12,12 @@ namespace LotteryGame
         public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
         string playerusername;
         int prizes;
+        int[] usernumbers = new int[6];
+        int[] randomnumbers = new int[6];
         public string Playerusername { get => playerusername; set => playerusername = value; }
         public int Prizes { get => prizes; set => prizes = value; }
+        public int[] Usernumbers { get => usernumbers; set => usernumbers = value; }
+        public int[] Randomnumbers { get => randomnumbers; set => randomnumbers = value; }
 
         public static void Builder()
         {
@@ -83,8 +87,10 @@ namespace LotteryGame
             }
 
         }
-        public void DBgameinsert(int[] usernumbers, int[] randomNumbers, string pPlayerusername, int pPrizes)
+        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, string pPlayerusername, int pPrizes)
         {
+            usernumbers = pUsernumbers;
+            randomnumbers = pRandomNumbers;
             prizes = pPrizes;
             Builder();
             try
@@ -111,8 +117,8 @@ namespace LotteryGame
                     string sqlgame = "INSERT INTO games (player_id, ticket, player_numbers, prizes) VALUES ('" + playerid + "' ,@ticket, @playernumbers, '" + pPrizes + "')";
                     using (SqlCommand cmd = new SqlCommand(sqlgame, connection))
                     {
-                        cmd.Parameters.AddWithValue("ticket", string.Join(",", randomNumbers));
-                        cmd.Parameters.AddWithValue("playernumbers", string.Join(",", usernumbers));
+                        cmd.Parameters.AddWithValue("ticket", string.Join(",", pRandomNumbers));
+                        cmd.Parameters.AddWithValue("playernumbers", string.Join(",", pUsernumbers));
                         cmd.ExecuteNonQuery();
                         Console.WriteLine("Successfully inserted in game");
                     }

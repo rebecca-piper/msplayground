@@ -10,7 +10,7 @@ namespace LotteryGame
         {         
             var SQLclass = new SQLdata();
             var game = new Game();
-            int prizes = 0;
+            
             while (true)
             {
                 try
@@ -38,14 +38,14 @@ namespace LotteryGame
                                 Console.WriteLine("You will be asked to enter 6 numbers.");
                                 Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
 
-                                int[] userNumbers = game.GetUserNumbers();
+                                int[] userNumbers = game.GetUserNumbers(game.UserNums);
                                 Console.WriteLine("Numbers well received");
                                 Console.WriteLine("------------------------");
                                 Console.WriteLine("Lottery Numbers");
-                                int[] randomNumbers = game.GetRandomNumbers();
-                                int matchedNumbers = userNumbers.Intersect(randomNumbers).Count();
-                                game.Prizes(matchedNumbers, userNumbers, randomNumbers);
-                                SQLclass.DBgameinsert(userNumbers, randomNumbers, SQLclass.Playerusername, SQLclass.Prizes);
+                                int[] randomNumbers = game.GetRandomNumbers(game.RandomNums);
+                                int matchedNumbers = game.UserNums.Intersect(game.RandomNums).Count();
+                                game.Prizes(game.Matchednumbers, game.UserNums, game.RandomNums);
+                                SQLclass.DBgameinsert(SQLclass.Usernumbers, SQLclass.Randomnumbers, SQLclass.Playerusername, SQLclass.Prizes);
                                 break;
                             case 2:
                                 Console.WriteLine("PLease enter your username");
