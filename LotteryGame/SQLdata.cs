@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,73 +12,66 @@ namespace LotteryGame
     {
         public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
         string playerusername;
-        int prizes;
+
         int[] usernumbers = new int[6];
         int[] randomnumbers = new int[6];
         public string Playerusername { get => playerusername; set => playerusername = value; }
-        public int Prizes { get => prizes; set => prizes = value; }
+
         public int[] Usernumbers { get => usernumbers; set => usernumbers = value; }
         public int[] Randomnumbers { get => randomnumbers; set => randomnumbers = value; }
 
         public static void Builder()
         {
-            builder.DataSource = "TOMBOLA-1665";
+            builder.DataSource = "localhost";
             builder.InitialCatalog = "test";
             builder.IntegratedSecurity = true;
             builder.TrustServerCertificate = true;
         }
-        
+
         public void DBplayerInsert(string pPlayerusername)
         {
-            playerusername = pPlayerusername;
-            Console.WriteLine("PLease enter your username");
-             pPlayerusername = Console.ReadLine();
+
+            Console.WriteLine("Please enter your username");
+            playerusername = Console.ReadLine();
+
             Builder();
+            bool isValidInput = false;
+            int duplicate = 0;
             try
             {
-                bool isValidInput = false;
+                
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     while (!isValidInput)
                     {
-
-
-                        string duplicateName = "SELECT player_username FROM player WHERE player_username = '" + pPlayerusername + "'";
-
-                        using (SqlCommand command = new SqlCommand(duplicateName, connection))
-                        {
+                        using (SqlCommand command = new SqlCommand("dbo.playerproc", connection))
+                    {
+                        
+                        
                             connection.Open();
-                            using (SqlDataReader reader = command.ExecuteReader())
+
+                            command.Parameters.AddWithValue("@player_username", playerusername);
+                                command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
+                                command.CommandType = CommandType.StoredProcedure;
+                                
+                                command.ExecuteNonQuery();
+
+                                duplicate = (int)command.Parameters["@duplicate"].Value;
+                            if (duplicate == -1)
                             {
-
-
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    pPlayerusername = reader.GetString(0);
-                                    Console.WriteLine(pPlayerusername + "is already used, please choose a different username");
-                                    pPlayerusername = Console.ReadLine();
-                                    connection.Close();
-                                }
-                                else
-                                {
-                                    connection.Close();
-
-                                    string sqlplayer = "INSERT INTO player (player_username) VALUES ('" + pPlayerusername + "')";
-                                    connection.Open();
-                                    using (SqlCommand cmd = new SqlCommand(sqlplayer, connection))
-                                    {
-
-
-                                        cmd.ExecuteNonQuery();
-
-                                        Console.WriteLine("Successfully inserted in player");
-                                        break;
-                                    }
-                                }
-
+                                Console.WriteLine("Username is already used");
+                                playerusername = Console.ReadLine();
+                                connection.Close();
                             }
+                            else
+                            {
+                                break;
+                            }
+                                
+                            
+                            
                         }
+                       
                     }
                 }
             }
@@ -87,41 +81,27 @@ namespace LotteryGame
             }
 
         }
-        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, string pPlayerusername, int pPrizes)
+        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, int pPrizes)
         {
             usernumbers = pUsernumbers;
             randomnumbers = pRandomNumbers;
-            prizes = pPrizes;
+
+
             Builder();
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    string IDquery = "SELECT player_id FROM player WHERE player_username = '" + pPlayerusername + "'";
-                    decimal playerid = 0;
-                    using (SqlCommand command = new SqlCommand(IDquery, connection))
+                   
+                    using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
+                        command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
 
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                playerid = reader.GetDecimal(0);
-
-                            }
-
-                        }
                     }
-                    string sqlgame = "INSERT INTO games (player_id, ticket, player_numbers, prizes) VALUES ('" + playerid + "' ,@ticket, @playernumbers, '" + pPrizes + "')";
-                    using (SqlCommand cmd = new SqlCommand(sqlgame, connection))
-                    {
-                        cmd.Parameters.AddWithValue("ticket", string.Join(",", pRandomNumbers));
-                        cmd.Parameters.AddWithValue("playernumbers", string.Join(",", pUsernumbers));
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine("Successfully inserted in game");
-                    }
+
                 }
             }
             catch (SqlException e)
@@ -167,7 +147,7 @@ namespace LotteryGame
                 using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
                 {
                     conn.Open();
-                    string sGames = "SELECT game_id, ticket, player_numbers FROM games WHERE player_id = '" + playerid + "'";
+                    string sGames = "SELECT game_id, picks FROM games WHERE player_id = '" + playerid + "'";
 
                     using (SqlCommand cmd = new SqlCommand(sGames, conn))
                     {
@@ -193,6 +173,52 @@ namespace LotteryGame
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        public void ExistingGame()
+        {
+            Builder();
+            decimal gameID = 0;
+            try
+
+            {
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+
+                    connection.Open();
+                    string IDquery = "SELECT lottery_id FROM games WHERE game_id = (SELECT max(game_id) FROM games)";
+
+                    using (SqlCommand command = new SqlCommand(IDquery, connection))
+                    {
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                decimal lotteryID = reader.GetDecimal(0);
+                                string calls = reader.GetString(1);
+                                Console.WriteLine("Existing game: " + lotteryID);
+                                Console.WriteLine("calls : " + calls);
+                                connection.Close();
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Player not found");
+                            }
+
+                        }
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+
             }
         }
     }

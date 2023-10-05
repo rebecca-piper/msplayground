@@ -15,12 +15,13 @@ namespace LotteryGame
             {
                 try
                 {
+                    
                     Console.WriteLine("New game: Press 1 to play a new game");
                     Console.WriteLine("Review games: Press 2 to review all your games");
                     Console.WriteLine("Exit: Press any number to exit");
 
                     var menuOption = Convert.ToInt32(Console.ReadLine());
-                    if (menuOption != 1 && menuOption != 2)
+                    if (menuOption != 1 && menuOption != 2 && menuOption != 3)
                     {
                         Environment.Exit(0);
                     }
@@ -38,14 +39,14 @@ namespace LotteryGame
                                 Console.WriteLine("You will be asked to enter 6 numbers.");
                                 Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
 
-                                int[] userNumbers = game.GetUserNumbers(game.UserNums);
+                                 game.GetUserNumbers();
                                 Console.WriteLine("Numbers well received");
                                 Console.WriteLine("------------------------");
                                 Console.WriteLine("Lottery Numbers");
-                                int[] randomNumbers = game.GetRandomNumbers(game.RandomNums);
-                                int matchedNumbers = game.UserNums.Intersect(game.RandomNums).Count();
-                                game.Prizes(game.Matchednumbers, game.UserNums, game.RandomNums);
-                                SQLclass.DBgameinsert(SQLclass.Usernumbers, SQLclass.Randomnumbers, SQLclass.Playerusername, SQLclass.Prizes);
+                                game.GetRandomNumbers();
+                                
+                                game.Prizes();
+                                SQLclass.DBgameinsert(game.UserNums, game.RandomNums, game.Prize);
                                 break;
                             case 2:
                                 Console.WriteLine("PLease enter your username");
@@ -54,6 +55,7 @@ namespace LotteryGame
                                 SQLclass.PreviewGames(SQLclass.Playerusername);
                                 break;
                             case 3:
+                                SQLclass.ExistingGame();
                                 break;
                             default:
                                 Console.WriteLine("Press any key to exit");

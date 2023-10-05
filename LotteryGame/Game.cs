@@ -10,16 +10,16 @@ namespace LotteryGame
     {
         int[] userNums = new int[6];
         int[] randomNums = new int[6];
-        int matchednumbers;
+        int prize;
         public int[] UserNums { get => userNums; set => userNums = value; }
         public int[] RandomNums { get => randomNums; set => randomNums = value; }
-        public int Matchednumbers { get => matchednumbers; set => matchednumbers = value; }
+        public int Prize { get => prize; set => prize = value; }
 
-        public  int[] GetUserNumbers(int[] pUsernumbers)
+        public  int[] GetUserNumbers()
         {
-            
+            userNums = new int[6];
             Console.WriteLine("Please enter six numbers from 0-20");
-           userNums = pUsernumbers;
+           
 
             for (int i = 0; i < 6; i++)
             {
@@ -36,7 +36,7 @@ namespace LotteryGame
                     {
                         if (userNum >= 0 && userNum <= 20 && !userNums.Contains(userNum))
                         {
-                            pUsernumbers[i] = userNum;
+                            userNums[i] = userNum;
                             break;
                         }
                         if (userNum <= 0 || userNum >= 20)
@@ -59,71 +59,69 @@ namespace LotteryGame
             }
             return userNums;
         }
-        public int[] GetRandomNumbers(int[] pRandomnums)
+
+        public int[] GetRandomNumbers()
         {
-
-            int Min = 1;
-            int Max = 20;
-            randomNums = pRandomnums;
-
-            Random randNum = new Random();
-            for (int i = 0; i < pRandomnums.Length; i++)
+            int min = 1;
+            int max = 20;
+            int[] range = new int[max - min + 1];
+            for (int i = 0; i < range.Length; i++)
             {
-                int num = randNum.Next(Min, Max);
-                bool randomNumber = false;
-                while (!randomNumber)
-                {
-                    if (!pRandomnums.Contains(Convert.ToInt32(num)))
-                    {
-                        pRandomnums[i] = Convert.ToInt32(num);
-                        randomNumber = true;
-                    }
-                    else
-                    {
-                        num = randNum.Next(Min, Max);
-                    }
-                }
+                range[i] = min++;
+            }
+            Random rnd = new Random();
 
-            }
-            foreach (var number in pRandomnums)
+            for (int i = 0; i < range.Length; i++)
             {
-                Console.WriteLine(number.ToString());
+                
+                int numIndex = rnd.Next(range.Length);
+
+                
+                int temp = range[i];
+                range[i] = range[numIndex];
+                range[numIndex] = temp;
             }
-            return pRandomnums;
+            
+            Array.Copy(range, randomNums, randomNums.Length);
+            Console.WriteLine(String.Join(", ", randomNums));
+            return randomNums;
         }
-        public void Prizes(int pMatchedNumbers, int[] pUsernumbers, int[] pRandomNumbers)
+        public void ExistingGame()
         {
-            userNums = pUsernumbers;
-            randomNums = pRandomNumbers;
-            matchednumbers = pMatchedNumbers;
+
+        }
+        public void Prizes()
+        {
+                     
             Console.WriteLine("-----------");
             Console.WriteLine("Winning numbers");
-            var winningnums = pUsernumbers.Intersect(pRandomNumbers);
-            int prize;
+            var winningnums = userNums.Intersect(randomNums);
+            int matchedNumbers = winningnums.Count();
+            
             foreach (var number in winningnums)
             {
                 Console.WriteLine(number.ToString());
             }
 
-            if (pMatchedNumbers == 6)
+            if (matchedNumbers == 6)
             {
                 prize = 50;
                 Console.WriteLine("You matched 6 numbers");
                 Console.WriteLine("Congrats, you win £50!");
             }
-            else if (pMatchedNumbers == 5)
+            else if (matchedNumbers == 5)
             {
                 prize = 25;
                 Console.WriteLine("You matched 5 numbers");
                 Console.WriteLine("Congrats, you win £25!");
             }
-            else if (pMatchedNumbers == 4)
+            else if (matchedNumbers == 4)
             {
                 prize = 10;
                 Console.WriteLine("You matched 4 numbers");
                 Console.WriteLine("Congrats, you win £10!");
             }
-            else if (pMatchedNumbers == 3)
+            else if (matchedNumbers == 3)
             {
 
                 prize = 5;
