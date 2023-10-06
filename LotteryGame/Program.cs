@@ -9,18 +9,25 @@ namespace LotteryGame
         static void Main(string[] args)
         {         
             var SQLclass = new SQLdata();
-            var game = new Game();
-            
+            var lottery = new Lottery();
+            var menuOption = 0;
             while (true)
             {
-                try
-                {
-                    
-                    Console.WriteLine("New game: Press 1 to play a new game");
-                    Console.WriteLine("Review games: Press 2 to review all your games");
-                    Console.WriteLine("Exit: Press any number to exit");
+               
+                    try
+                    {
+                        Console.WriteLine("New game: Press 1 to play a new game");
+                        Console.WriteLine("Review games: Press 2 to review all your games");
+                        Console.WriteLine("Exit: Press any number to exit");
 
-                    var menuOption = Convert.ToInt32(Console.ReadLine());
+                        menuOption = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Invalid input. Please use numbers only");
+                    }
+
+
                     if (menuOption != 1 && menuOption != 2 && menuOption != 3)
                     {
                         Environment.Exit(0);
@@ -30,29 +37,62 @@ namespace LotteryGame
                         switch (menuOption)
                         {
                             case 1:
-                                
+                                try
+                                {
+                                    SQLclass.DBplayerInsert(SQLclass.Playerusername);
+                                }
+                                catch (SqlException e)
+                                {
+                                    Console.WriteLine(e.ToString() + "Error in inserting a player");
+                                }
 
-                                SQLclass.DBplayerInsert(SQLclass.Playerusername);
 
                                 Console.WriteLine("Welcome to the lottery");
-                                Console.WriteLine("------------------------");
-                                Console.WriteLine("You will be asked to enter 6 numbers.");
-                                Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
+                                    Console.WriteLine("------------------------");
+                                    Console.WriteLine("You will be asked to enter 6 numbers.");
+                                    Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
+                                try
+                                {
+                                    try
+                                    {
+                                        lottery.GetUserNumbers();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine("Error in getting player numbers");
+                                    }
 
-                                 game.GetUserNumbers();
-                                Console.WriteLine("Numbers well received");
-                                Console.WriteLine("------------------------");
-                                Console.WriteLine("Lottery Numbers");
-                                game.GetRandomNumbers();
-                                
-                                game.Prizes();
-                                SQLclass.DBgameinsert(game.UserNums, game.RandomNums, game.Prize);
+
+                                    Console.WriteLine("Numbers well received");
+                                    Console.WriteLine("------------------------");
+                                    Console.WriteLine("Lottery Numbers");
+                                    lottery.GetRandomNumbers();
+
+                                    lottery.Prizes();
+                                    SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
+                                    
+                                }
+                             catch (SqlException e)
+                                {
+                                    Console.WriteLine(e.ToString() + "Error in inserting a game");
+                                }
                                 break;
                             case 2:
                                 Console.WriteLine("PLease enter your username");
                                 SQLclass.Playerusername = Console.ReadLine();
 
-                                SQLclass.PreviewGames(SQLclass.Playerusername);
+                                try
+                                {
+                                    SQLclass.PreviewGames(SQLclass.Playerusername);
+                                }
+                                catch (SqlException e)
+                                {
+                                    Console.WriteLine(e.ToString(), "Error in pulling game results");
+                                }
+                                catch (InvalidOperationException e)
+                                {
+                                    Console.WriteLine("Connection error" + e);
+                                }
                                 break;
                             case 3:
                                 SQLclass.ExistingGame();
@@ -65,19 +105,9 @@ namespace LotteryGame
                         }
                     }
 
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-                catch (InvalidOperationException e)
-                {
-                    Console.WriteLine("Connection error" + e);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Invalid input. Please use numbers only");
-                }
+                
+               
+                
 
             }
         }

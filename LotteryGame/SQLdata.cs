@@ -30,49 +30,42 @@ namespace LotteryGame
 
         public void DBplayerInsert(string pPlayerusername)
         {
-
-            Console.WriteLine("Please enter your username");
-            playerusername = Console.ReadLine();
+           
 
             Builder();
             bool isValidInput = false;
-            int duplicate = 0;
+            
             try
             {
-                
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                while (!isValidInput)
                 {
-                    while (!isValidInput)
-                    {
+                    Console.WriteLine("Please enter a username");
+                    playerusername = Console.ReadLine();
+                    int duplicate = 0;
+                    using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {  
                         using (SqlCommand command = new SqlCommand("dbo.playerproc", connection))
                     {
-                        
-                        
                             connection.Open();
-
+                            //command.Parameters.Add(new SqlParameter("@player_username", SqlDbType.VarChar, 30)).Value = playerusername;
                             command.Parameters.AddWithValue("@player_username", playerusername);
-                                command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
-                                command.CommandType = CommandType.StoredProcedure;
-                                
-                                command.ExecuteNonQuery();
-
-                                duplicate = (int)command.Parameters["@duplicate"].Value;
-                            if (duplicate == -1)
-                            {
-                                Console.WriteLine("Username is already used");
-                                playerusername = Console.ReadLine();
-                                connection.Close();
-                            }
-                            else
-                            {
-                                break;
-                            }
-                                
-                            
-                            
+                            command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.ExecuteNonQuery();
+                            duplicate = (int)command.Parameters["@duplicate"].Value;
                         }
-                       
                     }
+                    if (duplicate == -1)
+                    {
+                        Console.WriteLine("Username is already used, please try again");
+
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+
                 }
             }
             catch (SqlException e)
