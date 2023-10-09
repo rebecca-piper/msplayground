@@ -8,7 +8,7 @@ namespace LotteryGame
 {
     public class Game
     {
-            int[] userNums = new int[6];
+            
             int[] randomNums = new int[6];
             int prize;
            
@@ -17,6 +17,7 @@ namespace LotteryGame
 
             public int[] GetRandomNumbers()
             {
+            
                 int min = 1;
                 int max = 20;
                 int[] range = new int[max - min + 1];
@@ -42,12 +43,12 @@ namespace LotteryGame
                 return randomNums;
             }
 
-        public void Prizes()
+        public void Prizes(int[] pUsernums)
         {
 
             Console.WriteLine("-----------");
             Console.WriteLine("Winning numbers");
-            var winningnums = userNums.Intersect(randomNums);
+            var winningnums = pUsernums.Intersect(randomNums);
             int matchedNumbers = winningnums.Count();
 
             foreach (var number in winningnums)
@@ -59,22 +60,22 @@ namespace LotteryGame
                 case 3:
                     prize = 5;
                     Console.WriteLine("You matched 3 numbers");
-                    Console.WriteLine("Congrats, you win" + prize);
+                    Console.WriteLine("Congrats, you win £" + prize);
                     break;
                 case 4:
                     prize = 10;
                     Console.WriteLine("You matched 4 numbers");
-                    Console.WriteLine("Congrats, you win" + prize);
+                    Console.WriteLine("Congrats, you win £" + prize);
                     break;
                 case 5:
                     prize = 25;
                     Console.WriteLine("You matched 5 numbers");
-                    Console.WriteLine("Congrats, you win" + prize);
+                    Console.WriteLine("Congrats, you win £" + prize);
                     break;
                 case 6:
                     prize = 50;
                     Console.WriteLine("You matched 6 numbers");
-                    Console.WriteLine("Congrats, you win" + prize);
+                    Console.WriteLine("Congrats, you win £" + prize);
                     break;
                 default:
                     Console.WriteLine("You didn't match 3 or more numbers :(");

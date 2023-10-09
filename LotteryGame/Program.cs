@@ -10,6 +10,7 @@ namespace LotteryGame
         {         
             var SQLclass = new SQLdata();
             var lottery = new Lottery();
+            var randomizer = new Game();
             var menuOption = 0;
             while (true)
             {
@@ -68,7 +69,7 @@ namespace LotteryGame
                                     Console.WriteLine("Lottery Numbers");
                                     lottery.GetRandomNumbers();
 
-                                    lottery.Prizes();
+                                    lottery.Prizes(lottery.UserNums);
                                     SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
                                     
                                 }

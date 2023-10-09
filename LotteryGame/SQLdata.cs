@@ -77,15 +77,13 @@ namespace LotteryGame
         public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, int pPrizes)
         {
             usernumbers = pUsernumbers;
-            randomnumbers = pRandomNumbers;
-
-
+ 
             Builder();
+           
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                   
                     using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
                     {
                         connection.Open();
@@ -94,6 +92,16 @@ namespace LotteryGame
                         command.ExecuteNonQuery();
 
                     }
+                    using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
+                    {
+                        command.Parameters.AddWithValue("@player_username", playerusername);
+                        command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
+                        command.Parameters.AddWithValue("@prizes", pPrizes);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
+
+                    }
+                   
 
                 }
             }
@@ -105,26 +113,35 @@ namespace LotteryGame
         }
         public void PreviewGames(string pPlayerusername)
         {
+            var gameID = 0;
             Builder();
             try
             {
-                decimal playerid = 0;
+                
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
 
                     connection.Open();
-                    string IDquery = "SELECT player_id FROM player WHERE player_username = '" + pPlayerusername + "'";
+              
 
-                    using (SqlCommand command = new SqlCommand(IDquery, connection))
+                    using (SqlCommand command = new SqlCommand("dbo.previewgame", connection))
                     {
-
+                        command.Parameters.AddWithValue("@player_username", playerusername);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
 
                             if (reader.HasRows)
                             {
-                                reader.Read();
-                                playerid = reader.GetDecimal(0);
+                               while (reader.Read()) 
+                               {
+                                    gameID = Convert.ToInt32(reader["player_id"]);
+                                    Console.WriteLine(gameID);
+                                    
+                                }
+                                
+                                
                                 connection.Close();
 
                             }
@@ -137,31 +154,31 @@ namespace LotteryGame
                     }
 
                 }
-                using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
-                {
-                    conn.Open();
-                    string sGames = "SELECT game_id, picks FROM games WHERE player_id = '" + playerid + "'";
+                //using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+                //{
+                //    conn.Open();
+                //    string sGames = "SELECT game_id, picks FROM games WHERE player_id = '" + playerid + "'";
 
-                    using (SqlCommand cmd = new SqlCommand(sGames, conn))
-                    {
+                //    using (SqlCommand cmd = new SqlCommand(sGames, conn))
+                //    {
 
-                        using (SqlDataReader readergame = cmd.ExecuteReader())
-                        {
-                            if (readergame.HasRows)
-                            {
+                //        using (SqlDataReader readergame = cmd.ExecuteReader())
+                //        {
+                //            if (readergame.HasRows)
+                //            {
 
-                                readergame.Read();
-                                decimal gameID = readergame.GetDecimal(0);
-                                string ticket = readergame.GetString(1);
-                                string playernumbers = readergame.GetString(2);
-                                Console.WriteLine("Game ID:" + gameID);
-                                Console.WriteLine("Ticket:" + ticket);
-                                Console.WriteLine("Numbers:" + playernumbers);
+                //                readergame.Read();
+                //                decimal gameID = readergame.GetDecimal(0);
+                //                string ticket = readergame.GetString(1);
+                //                string playernumbers = readergame.GetString(2);
+                //                Console.WriteLine("Game ID:" + gameID);
+                //                Console.WriteLine("Ticket:" + ticket);
+                //                Console.WriteLine("Numbers:" + playernumbers);
 
-                            }
-                        }
-                    }
-                }
+                //            }
+                //        }
+                //    }
+                //}
             }
             catch (SqlException e)
             {

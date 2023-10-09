@@ -9,11 +9,11 @@ namespace LotteryGame
     public class Lottery : Game
     {
         int[] userNums = new int[6];
-        int[] randomNums = new int[6];
-        int prize;
+      
+       
         public int[] UserNums { get => userNums; set => userNums = value; }
-        public int[] RandomNums { get => randomNums; set => randomNums = value; }
-        public int Prize { get => prize; set => prize = value; }
+        
+        
 
         public  int[] GetUserNumbers()
         {
