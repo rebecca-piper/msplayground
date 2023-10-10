@@ -29,7 +29,7 @@ namespace LotteryGame
                     }
 
 
-                    if (menuOption != 1 && menuOption != 2 && menuOption != 3)
+                    if (menuOption != 1 && menuOption != 2 && menuOption != 3 && menuOption != 4)
                     {
                         Environment.Exit(0);
                     }
@@ -38,32 +38,12 @@ namespace LotteryGame
                         switch (menuOption)
                         {
                             case 1:
-                                try
-                                {
                                     SQLclass.DBplayerInsert(SQLclass.Playerusername);
-                                }
-                                catch (SqlException e)
-                                {
-                                    Console.WriteLine(e.ToString() + "Error in inserting a player");
-                                }
-
-
-                                Console.WriteLine("Welcome to the lottery");
+                                    Console.WriteLine("Welcome to the lottery");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("You will be asked to enter 6 numbers.");
                                     Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-                                try
-                                {
-                                    try
-                                    {
-                                        lottery.GetUserNumbers();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine("Error in getting player numbers");
-                                    }
-
-
+                                    lottery.GetUserNumbers();
                                     Console.WriteLine("Numbers well received");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("Lottery Numbers");
@@ -71,32 +51,19 @@ namespace LotteryGame
 
                                     lottery.Prizes(lottery.UserNums);
                                     SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
-                                    
-                                }
-                             catch (SqlException e)
-                                {
-                                    Console.WriteLine(e.ToString() + "Error in inserting a game");
-                                }
-                                break;
+                                    break;
                             case 2:
                                 Console.WriteLine("PLease enter your username");
                                 SQLclass.Playerusername = Console.ReadLine();
-
-                                try
-                                {
-                                    SQLclass.PreviewGames(SQLclass.Playerusername);
-                                }
-                                catch (SqlException e)
-                                {
-                                    Console.WriteLine(e.ToString(), "Error in pulling game results");
-                                }
-                                catch (InvalidOperationException e)
-                                {
-                                    Console.WriteLine("Connection error" + e);
-                                }
+                                SQLclass.PreviewGames(SQLclass.Playerusername);
                                 break;
                             case 3:
                                 SQLclass.ExistingGame();
+                                break;
+                             case 4:
+                            
+                            randomizer.AutoPlay();
+                           
                                 break;
                             default:
                                 Console.WriteLine("Press any key to exit");

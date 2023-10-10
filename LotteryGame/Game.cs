@@ -10,12 +10,14 @@ namespace LotteryGame
     {
             
             int[] randomNums = new int[6];
+            int[] userrandomNums = new int[6];
             int prize;
            
             public int[] RandomNums { get => randomNums; set => randomNums = value; }
             public int Prize { get => prize; set => prize = value; }
+        public int[] UserrandomNums { get => userrandomNums; set => userrandomNums = value; }
 
-            public int[] GetRandomNumbers()
+        public int[] GetRandomNumbers()
             {
             
                 int min = 1;
@@ -40,15 +42,34 @@ namespace LotteryGame
 
                 Array.Copy(range, randomNums, randomNums.Length);
                 Console.WriteLine(String.Join(", ", randomNums));
-                return randomNums;
-            }
+            for (int i = 0; i < range.Length; i++)
+            {
 
+                int numIndex = rnd.Next(range.Length);
+
+
+                int temp = range[i];
+                range[i] = range[numIndex];
+                range[numIndex] = temp;
+            }
+            Array.Copy(range, userrandomNums, userrandomNums.Length);
+            Console.WriteLine(String.Join(", ", userrandomNums));
+            return randomNums;
+            }
+        public void AutoPlay()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                GetRandomNumbers();
+                Prizes(UserrandomNums);
+            }
+        }
         public void Prizes(int[] pUsernums)
         {
 
             Console.WriteLine("-----------");
             Console.WriteLine("Winning numbers");
-            var winningnums = pUsernums.Intersect(randomNums);
+            var winningnums = userrandomNums.Intersect(randomNums);
             int matchedNumbers = winningnums.Count();
 
             foreach (var number in winningnums)
