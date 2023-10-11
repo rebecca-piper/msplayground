@@ -2,15 +2,18 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
+
 namespace LotteryGame
 {
     class Program
     {
+         
         static void Main(string[] args)
-        {         
-            var SQLclass = new SQLdata();
+        {
+
+            SQLdata SQLclass = new SQLdata();
             var lottery = new Lottery();
-            var randomizer = new Game();
+            
             var menuOption = 0;
             while (true)
             {
@@ -18,7 +21,8 @@ namespace LotteryGame
                     try
                     {
                         Console.WriteLine("New game: Press 1 to play a new game");
-                        Console.WriteLine("Review games: Press 2 to review all your games");
+                        Console.WriteLine("Preview games: Press 2 to preview all your games");
+                        Console.WriteLine("Existing games: Press 3 to play existing game");
                         Console.WriteLine("Exit: Press any number to exit");
 
                         menuOption = Convert.ToInt32(Console.ReadLine());
@@ -47,10 +51,10 @@ namespace LotteryGame
                                     Console.WriteLine("Numbers well received");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("Lottery Numbers");
-                                    lottery.GetRandomNumbers();
+                                    lottery.GetRandomNumbers(menuOption);
 
-                                    lottery.Prizes(lottery.UserNums);
-                                    SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
+                                    lottery.Prizes(lottery.UserNums, SQLclass.CallsArr, lottery.UserStake);
+                                    SQLclass.NewLotteryInsert(lottery.UserNums, lottery.RandomNums, lottery.Prize, SQLclass.Playerusername);
                                     break;
                             case 2:
                                 Console.WriteLine("PLease enter your username");
@@ -58,13 +62,17 @@ namespace LotteryGame
                                 SQLclass.PreviewGames(SQLclass.Playerusername);
                                 break;
                             case 3:
-                                SQLclass.ExistingGame();
+                            SQLclass.DBplayerInsert(SQLclass.Playerusername);
+                            lottery.Stake();
+                            lottery.ExistingGame();
+                            
+                            SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize, SQLclass.Playerusername);
                                 break;
                              case 4:
-                            
-                            randomizer.AutoPlay();
-                           
-                                break;
+
+                            lottery.AutoPlay();
+
+                            break;
                             default:
                                 Console.WriteLine("Press any key to exit");
                                 Console.ReadKey();

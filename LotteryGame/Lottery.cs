@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LotteryGame
 {
+
     public class Lottery : Game
     {
+        
         int[] userNums = new int[6];
  
         public int[] UserNums { get => userNums; set => userNums = value; }
@@ -58,12 +61,14 @@ namespace LotteryGame
             return userNums;
         }
 
-       
+
         public void ExistingGame()
         {
-
+            sqlclass.ExistingGame();
+            GetUserNumbers();
+            Prizes(UserNums, sqlclass.callsArr, UserStake);
         }
-       
-         
+
+
     }
 }

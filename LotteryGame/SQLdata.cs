@@ -12,13 +12,17 @@ namespace LotteryGame
     {
         public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
         string playerusername;
-
+        
         int[] usernumbers = new int[6];
         int[] randomnumbers = new int[6];
+        string calls;
+        public int[] callsArr = new int[6];
         public string Playerusername { get => playerusername; set => playerusername = value; }
 
         public int[] Usernumbers { get => usernumbers; set => usernumbers = value; }
         public int[] Randomnumbers { get => randomnumbers; set => randomnumbers = value; }
+        public string Calls { get => calls; set => calls = value; }
+        public int[] CallsArr { get => callsArr; set => callsArr = value; }
 
         public static void Builder()
         {
@@ -62,7 +66,9 @@ namespace LotteryGame
                     }
                     if (duplicate == -1)
                     {
-                        Console.WriteLine("Username is already used, please try again");
+                        
+                            Console.WriteLine("Username is already used, please try again");
+                       
 
                     }
                     else
@@ -83,12 +89,13 @@ namespace LotteryGame
           
 
         }
-        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, int pPrizes)
+
+        public void NewLotteryInsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes, string pPlayerusername)
         {
             usernumbers = pUsernumbers;
- 
+            playerusername = pPlayerusername;
             Builder();
-           
+
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -103,7 +110,40 @@ namespace LotteryGame
                     }
                     using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
                     {
-                        command.Parameters.AddWithValue("@player_username", playerusername);
+                        command.Parameters.AddWithValue("@player_username", pPlayerusername);
+                        command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
+                        command.Parameters.AddWithValue("@prizes", pPrizes);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
+
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("SQL error in inserting game" + e.ToString());
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine("Connection error in inserting game" + e);
+            }
+        }
+        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes, string pPlayerusername)
+        {
+            usernumbers = pUsernumbers;
+            playerusername = pPlayerusername;
+            Builder();
+           
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+             
+                    using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@player_username", pPlayerusername);
                         command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
                         command.Parameters.AddWithValue("@prizes", pPrizes);
                         command.CommandType = CommandType.StoredProcedure;
@@ -181,7 +221,7 @@ namespace LotteryGame
         {
             Builder();
             var lotteryID = 0;
-            var calls = "";
+            
             try
 
             {
@@ -198,25 +238,13 @@ namespace LotteryGame
                         //lotteryID = (int)command.Parameters["@lottery_id"].Value;
                         calls = (string)command.Parameters["@calls"].Value;
                         //Console.WriteLine("Existing game: " + lotteryID);
-                        Console.WriteLine("calls : " + string.Join(",", calls));
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-
-                            if (reader.HasRows)
-                            {
-                                //lotteryID = (int)command.Parameters["@lottery_id"].Value;
-                                calls = (string)command.Parameters["@calls"].Value;
-                                //Console.WriteLine("Existing game: " + lotteryID);
-                                Console.WriteLine("calls : " +(calls));
+                        string[] s1 = calls.Split(','); 
+                        callsArr = Array.ConvertAll(s1, n => int.Parse(n));
+                          //lotteryID = (int)command.Parameters["@lottery_id"].Value;
+                           //Console.WriteLine("Existing game: " + lotteryID);
+                              
                                 connection.Close();
-
-                            }
-                            else
-                            {
-                                Console.WriteLine("Player not found");
-                            }
-
-                        }
+                        
                     }
 
                 }
