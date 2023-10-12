@@ -7,11 +7,12 @@ namespace LotteryGame
 {
     class Program
     {
-         
+
         static void Main(string[] args)
         {
 
             SQLdata SQLclass = new SQLdata();
+            Player player = new Player();
             var lottery = new Lottery();
             
             var menuOption = 0;
@@ -42,7 +43,7 @@ namespace LotteryGame
                         switch (menuOption)
                         {
                             case 1:
-                                    SQLclass.DBplayerInsert(SQLclass.Playerusername);
+                                    SQLclass.DBplayerInsert();
                                     Console.WriteLine("Welcome to the lottery");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("You will be asked to enter 6 numbers.");
@@ -53,20 +54,19 @@ namespace LotteryGame
                                     Console.WriteLine("Lottery Numbers");
                                     lottery.GetRandomNumbers(menuOption);
 
-                                    lottery.Prizes(lottery.UserNums, SQLclass.CallsArr, lottery.UserStake);
-                                    SQLclass.NewLotteryInsert(lottery.UserNums, lottery.RandomNums, lottery.Prize, SQLclass.Playerusername);
+                                    lottery.Prizes(lottery.UserNums, SQLclass.CallsArr, player.UserStake);
+                                    SQLclass.NewLotteryInsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
                                     break;
-                            case 2:
-                                Console.WriteLine("PLease enter your username");
-                                SQLclass.Playerusername = Console.ReadLine();
-                                SQLclass.PreviewGames(SQLclass.Playerusername);
+                            case 2:    
+                                player.PlayerName();
+                                SQLclass.PreviewGames();
                                 break;
                             case 3:
-                            SQLclass.DBplayerInsert(SQLclass.Playerusername);
-                            lottery.Stake();
+                            SQLclass.DBplayerInsert();
+                            player.Stake();
                             lottery.ExistingGame();
                             
-                            SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize, SQLclass.Playerusername);
+                            SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
                                 break;
                              case 4:
 
@@ -80,10 +80,6 @@ namespace LotteryGame
                                 break;
                         }
                     }
-
-                
-               
-                
 
             }
         }

@@ -12,9 +12,10 @@ namespace LotteryGame
     {
         
         int[] userNums = new int[6];
- 
+        double pot;
         public int[] UserNums { get => userNums; set => userNums = value; }
-        
+        public double Pot { get => pot; set => pot = value; }
+
         public  int[] GetUserNumbers()
         {
             userNums = new int[6];
@@ -42,7 +43,7 @@ namespace LotteryGame
                             }
                             if (userNum <= 0 || userNum >= 20)
                             {
-                                throw new Exception();
+                                Console.WriteLine("Number out of range. Please enter a number betweeon 0 and 20");
                             }
                             else if (userNums.Contains(userNum))
                             {
@@ -64,9 +65,12 @@ namespace LotteryGame
 
         public void ExistingGame()
         {
+            Player playerstake = new Player();
+            
             sqlclass.ExistingGame();
+            pot = playerstake.UserStake + sqlclass.StoredPot;
             GetUserNumbers();
-            Prizes(UserNums, sqlclass.callsArr, UserStake);
+            Prizes(UserNums, sqlclass.callsArr, playerstake.UserStake);
         }
 
 

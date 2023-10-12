@@ -9,12 +9,12 @@ namespace LotteryGame
     public class Game
     {
         public SQLdata sqlclass = new SQLdata();
-     
+        Player playerClass = new Player();
         int[] randomNums = new int[6];
             int[] userrandomNums = new int[6];
             double prize;
         int[] stakeArr = new int[5];
-        double[] multiplier = new double[4];
+        double[] multiplier = new double[7];
         int userStake;
             public int[] RandomNums { get => randomNums; set => randomNums = value; }
             public double Prize { get => prize; set => prize = value; }
@@ -64,6 +64,7 @@ namespace LotteryGame
             Array.Copy(range, userrandomNums, userrandomNums.Length);
             if (menuOption == 4)
             {
+                Console.WriteLine(String.Join(", ", randomNums));
                 Console.WriteLine(String.Join(", ", userrandomNums));
             }
             
@@ -75,83 +76,47 @@ namespace LotteryGame
             for (int i = 0; i < 10; i++)
             {
                 GetRandomNumbers(4);
-                Prizes(UserrandomNums, sqlclass.callsArr, userStake);
+                Prizes(UserrandomNums, sqlclass.callsArr, playerClass.UserStake);
             }
         }
-        public void Stake()
+     
+        public void Prizes(int[] pUsernums, int[] calls, int pStake )
         {
-
-            int[] stakeArr = { 5, 10, 25, 50 };
-            Console.WriteLine("Enter your stake from" + String.Join(", ", stakeArr));
-            userStake = Convert.ToInt32(Console.ReadLine());
-            
-            
-        }
-        public void Prizes(int[] pUsernums, int[] calls, int pStake)
-        {
-            userStake = pStake;
+            playerClass.UserStake = pStake;
             int matchedNumbers = 0;
            
-            double[] multiplier = { 1, 1.25, 1.5, 2};
+            double[] multiplier = { 0, 0, 0 , 1, 1.25, 1.5, 2};
             Console.WriteLine("-----------");
             Console.WriteLine("Winning numbers");
+            int[] winningnums = new int[6];
            if (pUsernums != null && calls[0] != 0)
             {
-                var winningnums = pUsernums.Intersect(calls);
-                matchedNumbers = winningnums.Count();
-                foreach (var number in winningnums)
-                {
-                    Console.WriteLine(number.ToString());
-                }
+                winningnums = pUsernums.Intersect(calls).ToArray();
+                
             }
           else if (pUsernums != null)
             {
-              var winningnums = pUsernums.Intersect(randomNums);
-                matchedNumbers = winningnums.Count();
-                foreach (var number in winningnums)
-                {
-                    Console.WriteLine(number.ToString());
-                }
+               winningnums = pUsernums.Intersect(randomNums).ToArray();
+                
             }
 
-            else if (userrandomNums != null)
+       
+            matchedNumbers = winningnums.Count();
+            foreach (var number in winningnums)
             {
-                var winningnums = userrandomNums.Intersect(randomNums);
-                matchedNumbers = winningnums.Count();
-                foreach (var number in winningnums)
-                {
-                    Console.WriteLine(number.ToString());
-                }
+                Console.WriteLine(number.ToString());
             }
-           
-            switch (matchedNumbers)
-            {
-                case 3:
-                    prize = multiplier[0] * pStake;
-                 
-                    break;
-                case 4:
-                    prize = multiplier[1] * pStake;
 
-                    break;
-                case 5:
-                    prize = multiplier[2] * pStake;
-
-                    break;
-                case 6:
-                    prize = multiplier[3] * pStake;
-
-                    break;
-                default:
-                    Console.WriteLine("You didn't match 3 or more numbers :(");
-                    Console.WriteLine("Better luck next time");
-                    break;
-                    
-            }
             if (matchedNumbers >= 3)
             {
+                prize = multiplier[matchedNumbers] * pStake;
                 Console.WriteLine("You matched" + matchedNumbers +  "numbers");
                 Console.WriteLine("Congrats, you win £" + prize);
+            }
+            else
+            {
+                Console.WriteLine("You didn't match 3 or more numbers :(");
+                Console.WriteLine("Better luck next time");
             }
 
         }
