@@ -9,18 +9,20 @@ namespace LotteryGame
     public class Game
     {
         public SQLdata sqlclass = new SQLdata();
-        Player playerClass = new Player();
+        private static Player playerClass = new Player();
         int[] randomNums = new int[6];
             int[] userrandomNums = new int[6];
             double prize;
         int[] stakeArr = new int[5];
         double[] multiplier = new double[7];
         int userStake;
-            public int[] RandomNums { get => randomNums; set => randomNums = value; }
+        int matchedNumbers;
+        public int[] RandomNums { get => randomNums; set => randomNums = value; }
             public double Prize { get => prize; set => prize = value; }
         public int[] UserrandomNums { get => userrandomNums; set => userrandomNums = value; }
         public int UserStake { get => userStake; set => userStake = value; }
-      
+        public static Player PlayerClass { get => playerClass; set => playerClass = value; }
+        public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
 
         public int[] GetRandomNumbers(int menuOption)
             {
@@ -83,7 +85,7 @@ namespace LotteryGame
         public void Prizes(int[] pUsernums, int[] calls, int pStake )
         {
             playerClass.UserStake = pStake;
-            int matchedNumbers = 0;
+            
            
             double[] multiplier = { 0, 0, 0 , 1, 1.25, 1.5, 2};
             Console.WriteLine("-----------");

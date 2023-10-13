@@ -39,7 +39,7 @@ namespace LotteryGame
         }
         public void Stake()
         {
-            SQLdata SQLclass = new SQLdata();
+            
             int[] stakeArr = { 5, 10, 25, 50 };
             while (true)
             {
@@ -56,7 +56,7 @@ namespace LotteryGame
                     break;
                 }
             }
-
+           
         }
     }
 }

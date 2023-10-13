@@ -63,14 +63,14 @@ namespace LotteryGame
         }
 
 
-        public void ExistingGame()
+        public void ExistingGame(int pStake)
         {
-            Player playerstake = new Player();
             
-            sqlclass.ExistingGame();
-            pot = playerstake.UserStake + sqlclass.StoredPot;
+            PlayerClass.UserStake = pStake;
+            sqlclass.ExistingGame(pStake, MatchedNumbers);
+            
             GetUserNumbers();
-            Prizes(UserNums, sqlclass.callsArr, playerstake.UserStake);
+            Prizes(UserNums, sqlclass.callsArr, pStake);
         }
 
 

@@ -7,14 +7,17 @@ namespace LotteryGame
 {
     class Program
     {
+        private static Lottery lotteryclass = new Lottery();
+
+        public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
 
         static void Main(string[] args)
         {
-
+             Player player = new Player();
             SQLdata SQLclass = new SQLdata();
-            Player player = new Player();
-            var lottery = new Lottery();
             
+
+
             var menuOption = 0;
             while (true)
             {
@@ -48,14 +51,14 @@ namespace LotteryGame
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("You will be asked to enter 6 numbers.");
                                     Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-                                    lottery.GetUserNumbers();
+                                    lotteryclass.GetUserNumbers();
                                     Console.WriteLine("Numbers well received");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("Lottery Numbers");
-                                    lottery.GetRandomNumbers(menuOption);
+                                    lotteryclass.GetRandomNumbers(menuOption);
 
-                                    lottery.Prizes(lottery.UserNums, SQLclass.CallsArr, player.UserStake);
-                                    SQLclass.NewLotteryInsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
+                                    lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
+                                    SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
                                     break;
                             case 2:    
                                 player.PlayerName();
@@ -64,13 +67,13 @@ namespace LotteryGame
                             case 3:
                             SQLclass.DBplayerInsert();
                             player.Stake();
-                            lottery.ExistingGame();
+                            lotteryclass.ExistingGame(player.UserStake);
                             
-                            SQLclass.DBgameinsert(lottery.UserNums, lottery.RandomNums, lottery.Prize);
+                            SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
                                 break;
                              case 4:
 
-                            lottery.AutoPlay();
+                            lotteryclass.AutoPlay();
 
                             break;
                             default:
