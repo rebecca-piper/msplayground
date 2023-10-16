@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace LotteryGame
 {
@@ -12,7 +13,8 @@ namespace LotteryGame
         private static Player playerClass = new Player();
         int[] randomNums = new int[6];
             int[] userrandomNums = new int[6];
-            double prize;
+        
+        double prize;
         int[] stakeArr = new int[5];
         double[] multiplier = new double[7];
         int userStake;
@@ -23,6 +25,7 @@ namespace LotteryGame
         public int UserStake { get => userStake; set => userStake = value; }
         public static Player PlayerClass { get => playerClass; set => playerClass = value; }
         public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
+  
 
         public int[] GetRandomNumbers(int menuOption)
             {
@@ -109,11 +112,16 @@ namespace LotteryGame
                 Console.WriteLine(number.ToString());
             }
 
-            if (matchedNumbers >= 3)
+            if (matchedNumbers >= 3 && matchedNumbers < 6)
             {
                 prize = multiplier[matchedNumbers] * pStake;
                 Console.WriteLine("You matched" + matchedNumbers +  "numbers");
                 Console.WriteLine("Congrats, you win £" + prize);
+            }
+            else if (matchedNumbers == 6)
+            {
+                Console.WriteLine("You matched" + matchedNumbers + "numbers");
+                Console.WriteLine("Congrats, you won the jackpot £" + sqlclass.StoredPot);
             }
             else
             {
@@ -123,6 +131,7 @@ namespace LotteryGame
 
         }
 
+      
     }
 }
 

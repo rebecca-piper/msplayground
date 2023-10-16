@@ -8,15 +8,16 @@ namespace LotteryGame
     class Program
     {
         private static Lottery lotteryclass = new Lottery();
-
+         
         public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
+        
 
         static void Main(string[] args)
         {
-             Player player = new Player();
+           
             SQLdata SQLclass = new SQLdata();
-            
 
+            Player player;
 
             var menuOption = 0;
             while (true)
@@ -30,14 +31,15 @@ namespace LotteryGame
                         Console.WriteLine("Exit: Press any number to exit");
 
                         menuOption = Convert.ToInt32(Console.ReadLine());
-                    }
+                     
+                }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Invalid input. Please use numbers only");
                     }
 
 
-                    if (menuOption != 1 && menuOption != 2 && menuOption != 3 && menuOption != 4)
+                    if (menuOption > 5)
                     {
                         Environment.Exit(0);
                     }
@@ -56,15 +58,17 @@ namespace LotteryGame
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("Lottery Numbers");
                                     lotteryclass.GetRandomNumbers(menuOption);
-
-                                    lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
+                            player = new Player();
+                            lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
                                     SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
                                     break;
-                            case 2:    
-                                player.PlayerName();
+                            case 2:
+                            player = new Player();
+                            player.PlayerName();
                                 SQLclass.PreviewGames();
                                 break;
                             case 3:
+                            player = new Player();
                             SQLclass.DBplayerInsert();
                             player.Stake();
                             lotteryclass.ExistingGame(player.UserStake);
@@ -75,6 +79,19 @@ namespace LotteryGame
 
                             lotteryclass.AutoPlay();
 
+                            break;
+                        case 5:
+                            player = new Player();
+                            SQLclass.DBplayerInsert();
+                            player.Stake();
+                            
+                            
+                            lotteryclass.ExistingGame(player.UserStake);
+                            
+                            lotteryclass.SetTimer();
+                            
+                            
+                            
                             break;
                             default:
                                 Console.WriteLine("Press any key to exit");

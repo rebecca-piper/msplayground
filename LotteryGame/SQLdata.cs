@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+
+
 namespace LotteryGame
 {
     public class SQLdata
@@ -43,7 +45,7 @@ namespace LotteryGame
                 while (!isValidInput)
                 {
                 playerClass.PlayerName();
-                    int duplicate = 0;
+                int duplicate = 0;
                 try 
                 { 
                     using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -130,7 +132,7 @@ namespace LotteryGame
         {
             
             usernumbers = pUsernumbers;
-            
+          
             Builder();
            
             try
@@ -214,7 +216,7 @@ namespace LotteryGame
             }
         }
 
-        public void ExistingGame(int pStake, int pMatchednumbers)
+        public void ExistingGame(int pStake)
         {
             Builder();
             var lotteryID = 0;
@@ -231,12 +233,13 @@ namespace LotteryGame
                     {
                         command.Parameters.Add("@lottery_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@calls", SqlDbType.VarChar, 30).Direction = ParameterDirection.Output;
-                        
+                        command.Parameters.Add("@pot_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@pot", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
                         command.ExecuteNonQuery();
                         //lotteryID = (int)command.Parameters["@lottery_id"].Value;
                         calls = (string)command.Parameters["@calls"].Value;
-                        //storedPot = (double)command.Parameters["@pot"].Value;
+                        storedPot = (int)command.Parameters["@pot"].Value;
                         //Console.WriteLine("Existing game: " + lotteryID);
                         string[] s1 = calls.Split(','); 
                         callsArr = Array.ConvertAll(s1, n => int.Parse(n));
@@ -250,7 +253,7 @@ namespace LotteryGame
                     {
                        
                         command.Parameters.AddWithValue("@stake", pStake);
-                        command.Parameters.AddWithValue("@matchednums", pMatchednumbers);
+                        
                         command.CommandType = CommandType.StoredProcedure;
                         command.ExecuteNonQuery();
 
@@ -273,14 +276,10 @@ namespace LotteryGame
             
             try
             {
-                System.Timers.Timer timer = new System.Timers.Timer(300000);
-
-                timer.Elapsed += TimerElapsed;
-
-                timer.Start();
+                
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("dbo.lotterypoc", connection))
+                    using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
                     {
                         connection.Open();
                         command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
@@ -302,9 +301,6 @@ namespace LotteryGame
             }
         }
 
-        private void TimerElapsed(object? sender, ElapsedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }
