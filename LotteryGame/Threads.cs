@@ -34,15 +34,14 @@ namespace LotteryGame
             //Thread thread = new Thread(obj);
             foreach (var player in PlayerList.ToList())
             {
-                lock (player)
-                {
+                
                     Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
                     {
                         Name = "obj thread"
 
                     };
                     thread.Start();
-                }
+                
                
 
             }
