@@ -12,8 +12,12 @@ namespace LotteryGame
 {
     public class SQLdata
     {
-        public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-          Player playerClass = new Player();
+        public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder() {
+            DataSource = "localhost",
+        InitialCatalog = "test",
+            IntegratedSecurity = true,
+            TrustServerCertificate = true};
+          //Player playerClass = new Player();
         
         int[] usernumbers = new int[6];
         int[] randomnumbers = new int[6];
@@ -28,23 +32,23 @@ namespace LotteryGame
         public int[] CallsArr { get => callsArr; set => callsArr = value; }
         public double StoredPot { get => storedPot; set => storedPot = value; }
 
-        public static void Builder()
-        {
-            builder.DataSource = "localhost";
-            builder.InitialCatalog = "test";
-            builder.IntegratedSecurity = true;
-            builder.TrustServerCertificate = true;
-        }
+        //public static void Builder()
+        //{
+        //    builder.DataSource = "localhost";
+        //    builder.InitialCatalog = "test";
+        //    builder.IntegratedSecurity = true;
+        //    builder.TrustServerCertificate = true;
+        //}
 
         public void DBplayerInsert()
         {
             
-            Builder();
+           
             bool isValidInput = false;
 
                 while (!isValidInput)
                 {
-                playerClass.PlayerName();
+                Game.PlayerClass.PlayerName();
                 int duplicate = 0;
                 try 
                 { 
@@ -54,7 +58,7 @@ namespace LotteryGame
                     {
                             connection.Open();
                             //command.Parameters.Add(new SqlParameter("@player_username", SqlDbType.VarChar, 30)).Value = playerusername;
-                            command.Parameters.AddWithValue("@player_username", playerClass.Playerusername);
+                            command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
                             command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
                             command.CommandType = CommandType.StoredProcedure;
                             command.ExecuteNonQuery();
@@ -92,7 +96,7 @@ namespace LotteryGame
             
             usernumbers = pUsernumbers;
             
-            Builder();
+          
 
             try
             {
@@ -108,7 +112,7 @@ namespace LotteryGame
                     }
                     using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
                     {
-                        command.Parameters.AddWithValue("@player_username", playerClass.Playerusername);
+                        command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
                         command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
                         command.Parameters.AddWithValue("@prizes", pPrizes);
                         command.Parameters.AddWithValue("@pot", pPot);
@@ -133,7 +137,7 @@ namespace LotteryGame
             
             usernumbers = pUsernumbers;
           
-            Builder();
+            
            
             try
             {
@@ -144,7 +148,7 @@ namespace LotteryGame
                     using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
                     {
                        
-                        command.Parameters.AddWithValue("@player_username", playerClass.Playerusername);
+                        command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
                         command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
                         command.Parameters.AddWithValue("@prizes", pPrizes);
                         command.CommandType = CommandType.StoredProcedure;
@@ -170,7 +174,7 @@ namespace LotteryGame
             int lotteryID = 0;
             string picks = "";
             int prizes;
-            Builder();
+         
             try
             {
                 
@@ -180,7 +184,7 @@ namespace LotteryGame
 
                     using (SqlCommand command = new SqlCommand("dbo.previewgame", connection))
                     {
-                        command.Parameters.AddWithValue("@player_username", playerClass.Playerusername);
+                        command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
                         command.Parameters.Add("@player_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@lottery_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@picks", SqlDbType.VarChar, 30).Direction = ParameterDirection.Output;
@@ -218,9 +222,9 @@ namespace LotteryGame
 
         public void ExistingGame(int pStake)
         {
-            Builder();
+            
             var lotteryID = 0;
-            playerClass.UserStake = pStake;
+            Game.PlayerClass.UserStake = pStake;
           
             try
 
@@ -272,7 +276,7 @@ namespace LotteryGame
 
         public void NewLotteryTimer(int[] pRandomNumbers)
         {
-            Builder();
+            
             
             try
             {

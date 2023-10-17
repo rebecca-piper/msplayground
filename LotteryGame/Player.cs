@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace LotteryGame
 {
     public class Player
-    {
-        
+    {  
         string playerusername;
         double pot;
         int userStake;
@@ -17,6 +16,8 @@ namespace LotteryGame
         public double Pot { get => pot; set => pot = value; }
         public int UserStake { get => userStake; set => userStake = value; }
         public int[] StakeArr { get => stakeArr; set => stakeArr = value; }
+
+     
 
         public void PlayerName()
         {
@@ -58,5 +59,7 @@ namespace LotteryGame
             }
            
         }
+
+
     }
 }

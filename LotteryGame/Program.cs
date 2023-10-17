@@ -1,28 +1,34 @@
 ﻿using System;
 using System.Data.Common;
+using System.Numerics;
 using Microsoft.Data.SqlClient;
-
+using System.Threading;
 
 namespace LotteryGame
 {
     class Program
     {
         private static Lottery lotteryclass = new Lottery();
-         
+        private static Player player = new Player();
         public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
-        
+        public static SQLdata SQLclass { get => sQLclass; set => sQLclass = value; }
+        public static Player Player { get => player; set => player = value; }
+        public static Threads Tclass { get => tclass; set => tclass = value; }
+
+        private static Threads tclass = new Threads();
+        private static SQLdata sQLclass = new SQLdata();
 
         static void Main(string[] args)
         {
-           
-            SQLdata SQLclass = new SQLdata();
+          
+            
 
-            Player player;
+            
 
             var menuOption = 0;
             while (true)
             {
-               
+                
                     try
                     {
                         Console.WriteLine("New game: Press 1 to play a new game");
@@ -58,22 +64,24 @@ namespace LotteryGame
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("Lottery Numbers");
                                     lotteryclass.GetRandomNumbers(menuOption);
-                            player = new Player();
+                            
                             lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
                                     SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
                                     break;
                             case 2:
-                            player = new Player();
+                            
                             player.PlayerName();
                                 SQLclass.PreviewGames();
                                 break;
                             case 3:
-                            player = new Player();
-                            SQLclass.DBplayerInsert();
-                            player.Stake();
-                            lotteryclass.ExistingGame(player.UserStake);
-                            
-                            SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
+                            tclass.CreateObject();
+                            tclass.CreateThreads();
+                            //SQLclass.DBplayerInsert();
+                            //player.Stake();
+                            //lotteryclass.ExistingGame(player.UserStake);
+
+                            //SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
+                            lotteryclass.PlayGame();
                                 break;
                              case 4:
 
@@ -81,7 +89,7 @@ namespace LotteryGame
 
                             break;
                         case 5:
-                            player = new Player();
+                            
                             SQLclass.DBplayerInsert();
                             player.Stake();
                             

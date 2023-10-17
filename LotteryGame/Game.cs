@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -128,10 +130,17 @@ namespace LotteryGame
                 Console.WriteLine("You didn't match 3 or more numbers :(");
                 Console.WriteLine("Better luck next time");
             }
-
         }
 
-      
+      public void PlayGame()
+        {
+        
+            sqlclass.DBplayerInsert();
+            playerClass.Stake();
+            Program.Lotteryclass.ExistingGame(playerClass.UserStake);
+
+            sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
+        }
     }
 }
 
