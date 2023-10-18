@@ -54,7 +54,7 @@ namespace LotteryGame
                         switch (menuOption)
                         {
                             case 1:
-                                    SQLclass.DBplayerInsert();
+                                    SQLclass.DBplayerInsert(Player);
                                     Console.WriteLine("Welcome to the lottery");
                                     Console.WriteLine("------------------------");
                                     Console.WriteLine("You will be asked to enter 6 numbers.");
@@ -66,12 +66,12 @@ namespace LotteryGame
                                     lotteryclass.GetRandomNumbers(menuOption);
                             
                             lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
-                                    SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
+                                    SQLclass.NewLotteryInsert(player, lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
                                     break;
                             case 2:
                             
                             player.PlayerName();
-                                SQLclass.PreviewGames();
+                                SQLclass.PreviewGames(Player);
                                 break;
                             case 3:
                             tclass.CreateObject();
@@ -90,7 +90,7 @@ namespace LotteryGame
                             break;
                         case 5:
                             
-                            SQLclass.DBplayerInsert();
+                            SQLclass.DBplayerInsert(Player);
                             player.Stake();
                             
                             

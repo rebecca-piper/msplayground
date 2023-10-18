@@ -17,6 +17,15 @@ namespace LotteryGame
         public int UserStake { get => userStake; set => userStake = value; }
         public int[] StakeArr { get => stakeArr; set => stakeArr = value; }
 
+        public Player() { }
+
+        public Player(Player p)
+        {
+            playerusername = p.playerusername;
+            pot = p.pot;
+            userStake = p.userStake;
+            stakeArr = p.stakeArr;
+        }
      
 
         public void PlayerName()

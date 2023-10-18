@@ -12,7 +12,7 @@ namespace LotteryGame
     public class Game
     {
         public SQLdata sqlclass = new SQLdata();
-        private static Player playerClass = new Player();
+        private Player playerClass = new Player();
         int[] randomNums = new int[6];
             int[] userrandomNums = new int[6];
         
@@ -25,8 +25,13 @@ namespace LotteryGame
             public double Prize { get => prize; set => prize = value; }
         public int[] UserrandomNums { get => userrandomNums; set => userrandomNums = value; }
         public int UserStake { get => userStake; set => userStake = value; }
-        public static Player PlayerClass { get => playerClass; set => playerClass = value; }
+        public Player PlayerClass { get => playerClass; set => playerClass = value; }
         public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
+
+        public Game()
+        {
+            Console.WriteLine($"Game created, hash {this.GetHashCode()}");
+        }
   
 
         public int[] GetRandomNumbers(int menuOption)
@@ -132,18 +137,18 @@ namespace LotteryGame
             }
         }
 
-      public void PlayGame(Player thisPlayer)
+      public void PlayGame(object thisPlayer)
       {
-            PlayerClass = thisPlayer;
+            PlayerClass = (Player)thisPlayer;
 
             Thread thread = Thread.CurrentThread;
-            Console.WriteLine($"[PlayGame] thread.name:{thread.Name} player:{{{PlayerClass}}}");
+            Console.WriteLine($"[PlayGame] thread.name:{thread.Name} player:{{{PlayerClass}}} gamehash:{this.GetHashCode()}");
 
-            sqlclass.DBplayerInsert();
+            sqlclass.DBplayerInsert(PlayerClass);
             playerClass.Stake();
             Program.Lotteryclass.ExistingGame(playerClass.UserStake);
 
-            sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
+            sqlclass.DBgameinsert(PlayerClass, Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
       }
     }
 }

@@ -19,6 +19,11 @@ namespace LotteryGame
         public double Pot { get => pot; set => pot = value; }
         public  int[] UserNums { get => userNums; set => userNums = value; }
 
+        public Lottery()
+        {
+            Console.WriteLine($"Lottery created, hash {this.GetHashCode()}");
+        }
+
         public  int[] GetUserNumbers()
         {
             userNums = new int[6];
@@ -70,7 +75,7 @@ namespace LotteryGame
         {
             
             PlayerClass.UserStake = pStake;
-            sqlclass.ExistingGame(pStake);
+            sqlclass.ExistingGame(PlayerClass, pStake);
             
             GetUserNumbers();
             Prizes(UserNums, sqlclass.callsArr, pStake);
@@ -79,7 +84,7 @@ namespace LotteryGame
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
 
-            sqlclass.DBgameinsert(userNums, RandomNums, Prize);
+            sqlclass.DBgameinsert(PlayerClass, userNums, RandomNums, Prize);
             Prizes(UserNums, sqlclass.callsArr, PlayerClass.UserStake);
             GetRandomNumbers(5);
             sqlclass.NewLotteryTimer(RandomNums);
