@@ -132,15 +132,16 @@ namespace LotteryGame
             }
         }
 
-      public void PlayGame()
-        {
-        
+      public void PlayGame(Player thisPlayer)
+      {
+            PlayerClass = thisPlayer;
+
             sqlclass.DBplayerInsert();
             playerClass.Stake();
             Program.Lotteryclass.ExistingGame(playerClass.UserStake);
 
             sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
-        }
+      }
     }
 }
 
