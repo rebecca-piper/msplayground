@@ -40,14 +40,19 @@ namespace LotteryGame
             //ThreadStart obj = new ThreadStart(CreateObject);
             //Thread thread = new Thread(obj);
             int threadNum = 0;
-            foreach (var player in PlayerList.ToList())
+            foreach (var thisPlayer in PlayerList.ToList())
             {
-                Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
-                {
-                    // give the thread a recognisable name
-                    Name = $"obj thread {++threadNum}"
-                };
+                var thread = new Thread(
+                       () => Program.Lotteryclass.PlayGame(thisPlayer));
+                thread.Name = $"obj thread {++threadNum}";
                 thread.Start();
+
+//                Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame(thisPlayer)))
+//                {
+//                    // give the thread a recognisable name
+//                    Name = $"obj thread {++threadNum}"
+//                };
+//                thread.Start();
             }
 
             //Thread t1 = new Thread(Program.SQLclass.DBplayerInsert);
