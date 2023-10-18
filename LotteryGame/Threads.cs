@@ -8,11 +8,13 @@ namespace LotteryGame
     public class Threads
     {
         public readonly List<Player> PlayerList = new List<Player>();
+
+        // Make some example players for testing
         public void CreateObject()
         {
             for (int i = 0; i < 3; i++)
             {
-                PlayerList.Add(new Player() { Playerusername=$"player{i+1}", Pot=(double)50, StakeArr=new int[]{5}, UserStake=5});
+                PlayerList.Add(new Player() { Playerusername=$"player{i+1}", UserStake=5 });
             }
 
             // print the list of players
