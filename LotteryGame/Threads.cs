@@ -14,8 +14,15 @@ namespace LotteryGame
             {
                 PlayerList.Add(new Player() { Playerusername=$"player{i}", Pot=(double)50, StakeArr=new int[]{5}, UserStake=5});
             }
-           
+
+            // print the list of players
+            Console.WriteLine("Current players ready to play:");
+            foreach (Player p in PlayerList)
+            {
+                Console.WriteLine(p);
+            } Console.WriteLine();
         }
+
         public void CreateThreads()
         {
 
