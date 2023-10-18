@@ -12,7 +12,7 @@ namespace LotteryGame
         {
             for (int i = 0; i < 3; i++)
             {
-                PlayerList.Add(new Player() { Playerusername=$"player{i}", Pot=(double)50, StakeArr=new int[]{5}, UserStake=5});
+                PlayerList.Add(new Player() { Playerusername=$"player{i+1}", Pot=(double)50, StakeArr=new int[]{5}, UserStake=5});
             }
 
             // print the list of players
