@@ -12,7 +12,7 @@ namespace LotteryGame
         {
             for (int i = 0; i < 3; i++)
             {
-                PlayerList.Add(new Player());
+                PlayerList.Add(new Player() { Playerusername=$"player{i}", Pot=(double)50, StakeArr=new int[]{5}, UserStake=5});
             }
            
         }
@@ -32,18 +32,15 @@ namespace LotteryGame
             //  }
             //ThreadStart obj = new ThreadStart(CreateObject);
             //Thread thread = new Thread(obj);
+            int threadNum = 0;
             foreach (var player in PlayerList.ToList())
             {
-                
-                    Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
-                    {
-                        Name = "obj thread"
-
-                    };
-                    thread.Start();
-                
-               
-
+                Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
+                {
+                    // give the thread a recognisable name
+                    Name = $"obj thread {++threadNum}"
+                };
+                thread.Start();
             }
 
             //Thread t1 = new Thread(Program.SQLclass.DBplayerInsert);
