@@ -81,7 +81,7 @@ namespace LotteryGame
                             //lotteryclass.ExistingGame(player.UserStake);
 
                             //SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
-                            lotteryclass.PlayGame();
+                            //lotteryclass.PlayGame();
                                 break;
                              case 4:
 
