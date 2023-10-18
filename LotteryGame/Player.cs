@@ -21,9 +21,10 @@ namespace LotteryGame
 
         public void PlayerName()
         {
-            
-            bool isValidInput = false;
+            if (!string.IsNullOrEmpty(Playerusername))
+                return;
 
+            bool isValidInput = false;
             while (!isValidInput)
             {
                 try
