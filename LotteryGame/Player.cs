@@ -59,7 +59,10 @@ namespace LotteryGame
             }
            
         }
-
+        public override string ToString()
+        {
+            return $"name:{playerusername}\tpot:{pot}\tuserstake:{userStake}\tstakearr:{stakeArr}";
+        }
 
     }
 }
