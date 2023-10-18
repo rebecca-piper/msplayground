@@ -137,7 +137,7 @@ namespace LotteryGame
             PlayerClass = thisPlayer;
 
             Thread thread = Thread.CurrentThread;
-            Console.WriteLine($"[PlayGame] thread.name:{thread.Name} player:{PlayerClass}");
+            Console.WriteLine($"[PlayGame] thread.name:{thread.Name} player:{{{PlayerClass}}}");
 
             sqlclass.DBplayerInsert();
             playerClass.Stake();

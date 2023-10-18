@@ -62,7 +62,7 @@ namespace LotteryGame
         }
         public override string ToString()
         {
-            return $"name:{playerusername} \tpot:{pot} \tuserstake:{userStake} \tstakearr:{{{ String.Join(",",stakeArr) }}}";
+            return $"name:{playerusername} pot:{pot} userstake:{userStake} stakearr:{{{ String.Join(",",stakeArr) }}}";
         }
 
     }
