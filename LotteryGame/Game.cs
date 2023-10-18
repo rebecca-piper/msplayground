@@ -137,10 +137,8 @@ namespace LotteryGame
             }
         }
 
-      public void PlayGame(object thisPlayer)
+      public void PlayGame()
       {
-            PlayerClass = (Player)thisPlayer;
-
             Thread thread = Thread.CurrentThread;
             Console.WriteLine($"[PlayGame] thread.name:{thread.Name} player:{{{PlayerClass}}} gamehash:{this.GetHashCode()}");
 

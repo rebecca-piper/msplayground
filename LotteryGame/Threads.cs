@@ -48,11 +48,10 @@ namespace LotteryGame
             for (int i = 0; i < LotteryList.Count; i++)
             {
                 Lottery l = LotteryList[i];
-                Player p = l.PlayerClass;
                 Thread thread = new Thread(l.PlayGame);
                 // give the thread a recognisable name
                 thread.Name = $"objthread{++threadNum}";
-                thread.Start(p);
+                thread.Start();
             }
 
             //Thread t1 = new Thread(Program.SQLclass.DBplayerInsert);
