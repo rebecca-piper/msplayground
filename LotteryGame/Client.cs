@@ -46,10 +46,14 @@ namespace LotteryGame
                         // Creation of message that
                         // we will send to Server
                         byte[] messageSent = Encoding.ASCII.GetBytes("Test Client<EOF>");
-                        int byteSent = sender.Send(messageSent);
-
-                        // Data buffer
-                        byte[] messageReceived = new byte[1024];
+                        
+                    List<string> messages = new List<string>();
+                    messages.Add(Program.Player.Playerusername);
+                    messages.Add(Program.Player.UserStake.ToString());
+                    messages.Add(string.Join(",", Program.Player.UserNums));
+                    int byteSent = sender.Send(messageSent);
+                    // Data buffer
+                    byte[] messageReceived = new byte[1024];
 
                         // We receive the message using 
                         // the method Receive(). This 

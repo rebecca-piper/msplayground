@@ -8,23 +8,19 @@ namespace LotteryGame
 {
     class Program
     {
-        private static Lottery lotteryclass = new Lottery();
+        //private static Lottery lotteryclass = new Lottery();
         private static Player player = new Player();
-        public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
-        public static SQLdata SQLclass { get => sQLclass; set => sQLclass = value; }
+        //public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
+        //public static SQLdata SQLclass { get => sQLclass; set => sQLclass = value; }
         public static Player Player { get => player; set => player = value; }
-        public static Threads Tclass { get => tclass; set => tclass = value; }
-
-        private static Threads tclass = new Threads();
-        private static SQLdata sQLclass = new SQLdata();
+        //public static Threads Tclass { get => tclass; set => tclass = value; }
+       public static Client client = new Client();
+        //private static Threads tclass = new Threads();
+        //private static SQLdata sQLclass = new SQLdata();
 
         static void Main(string[] args)
         {
-          
-            
-
-            
-
+            client.ExecuteClient();
             var menuOption = 0;
             while (true)
             {
@@ -54,50 +50,50 @@ namespace LotteryGame
                         switch (menuOption)
                         {
                             case 1:
-                                    SQLclass.DBplayerInsert();
-                                    Console.WriteLine("Welcome to the lottery");
-                                    Console.WriteLine("------------------------");
-                                    Console.WriteLine("You will be asked to enter 6 numbers.");
-                                    Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-                                    lotteryclass.GetUserNumbers();
-                                    Console.WriteLine("Numbers well received");
-                                    Console.WriteLine("------------------------");
-                                    Console.WriteLine("Lottery Numbers");
-                                    lotteryclass.GetRandomNumbers(menuOption);
+                            //        SQLclass.DBplayerInsert();
+                            //        Console.WriteLine("Welcome to the lottery");
+                            //        Console.WriteLine("------------------------");
+                            //        Console.WriteLine("You will be asked to enter 6 numbers.");
+                            //        Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
+                            //        lotteryclass.GetUserNumbers();
+                            //        Console.WriteLine("Numbers well received");
+                            //        Console.WriteLine("------------------------");
+                            //        Console.WriteLine("Lottery Numbers");
+                            //        lotteryclass.GetRandomNumbers(menuOption);
                             
-                            lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
-                                    SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
-                                    break;
+                            //lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
+                            //        SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
+                            //        break;
                             case 2:
                             
-                            player.PlayerName();
-                                SQLclass.PreviewGames();
+                            //player.PlayerName();
+                            //    SQLclass.PreviewGames();
                                 break;
                             case 3:
-                            tclass.CreateObject();
-                            tclass.CreateThreads();
-                            //SQLclass.DBplayerInsert();
-                            //player.Stake();
-                            //lotteryclass.ExistingGame(player.UserStake);
+                            //tclass.CreateObject();
+                            //tclass.CreateThreads();
+                            ////SQLclass.DBplayerInsert();
+                            ////player.Stake();
+                            ////lotteryclass.ExistingGame(player.UserStake);
 
-                            //SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
-                            lotteryclass.PlayGame();
+                            ////SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
+                            //lotteryclass.PlayGame();
                                 break;
                              case 4:
 
-                            lotteryclass.AutoPlay();
+                            //lotteryclass.AutoPlay();
 
                             break;
                         case 5:
-                            
-                            SQLclass.DBplayerInsert();
-                            player.Stake();
-                            
-                            
-                            lotteryclass.ExistingGame(player.UserStake);
-                            
-                            lotteryclass.SetTimer();
-                            
+
+                            //SQLclass.DBplayerInsert();
+                            //player.Stake();
+
+
+                            //lotteryclass.ExistingGame(player.UserStake);
+
+                            //lotteryclass.SetTimer();
+                            player.GetPlayerRequest();
                             
                             
                             break;

@@ -32,19 +32,19 @@ namespace LotteryGame
             //  }
             //ThreadStart obj = new ThreadStart(CreateObject);
             //Thread thread = new Thread(obj);
-            foreach (var player in PlayerList.ToList())
-            {
+            //foreach (var player in PlayerList.ToList())
+            //{
                 
-                    Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
-                    {
-                        Name = "obj thread"
+            //        Thread thread = new Thread(new ThreadStart(Program.Lotteryclass.PlayGame))
+            //        {
+            //            Name = "obj thread"
 
-                    };
-                    thread.Start();
+            //        };
+            //        thread.Start();
                 
                
 
-            }
+            //}
 
             //Thread t1 = new Thread(Program.SQLclass.DBplayerInsert);
             //t1.Start();
