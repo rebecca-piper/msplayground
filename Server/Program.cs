@@ -10,7 +10,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Serversetup serversetup = new Serversetup();
+            ServerSetup serversetup = new ServerSetup();
             serversetup.ExecuteServer();
         }
     }

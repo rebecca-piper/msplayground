@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LotteryGame", "LotteryGame\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerForm", "CustomerForm\CustomerForm.csproj", "{16C4EEE2-79F5-49F2-BF0D-F9640A8E8DE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{26BBB24B-F330-47BB-ADA1-71A57A69163C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{16C4EEE2-79F5-49F2-BF0D-F9640A8E8DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16C4EEE2-79F5-49F2-BF0D-F9640A8E8DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16C4EEE2-79F5-49F2-BF0D-F9640A8E8DE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26BBB24B-F330-47BB-ADA1-71A57A69163C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26BBB24B-F330-47BB-ADA1-71A57A69163C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26BBB24B-F330-47BB-ADA1-71A57A69163C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26BBB24B-F330-47BB-ADA1-71A57A69163C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

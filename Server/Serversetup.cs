@@ -12,7 +12,7 @@ namespace Server
 {
 
 
-    internal class Serversetup
+    internal class ServerSetup
     {
         //public static HttpListener _httpListener = new HttpListener();
         //public void ServerDetails()
@@ -119,4 +119,3 @@ namespace Server
         }
     }
 }
-
