@@ -12,7 +12,7 @@ namespace Server
 {
     public class Game
     {
-        public SQLdata sqlclass = new SQLdata();
+        private static SQLdata sqlclass = new SQLdata();
 
         int[] randomNums = new int[6];
         int[] userrandomNums = new int[6];
@@ -28,7 +28,7 @@ namespace Server
 
 
         public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
-
+        public static SQLdata Sqlclass { get => sqlclass; set => sqlclass = value; }
 
         public int[] GetRandomNumbers(int menuOption)
         {
@@ -84,13 +84,13 @@ namespace Server
             for (int i = 0; i < 10; i++)
             {
                 GetRandomNumbers(4);
-                Prizes(UserrandomNums, sqlclass.callsArr, playerClass.UserStake);
+                //Prizes(UserrandomNums, sqlclass.callsArr, playerClass.UserStake);
             }
         }
 
-        public void Prizes(int[] pUsernums, int[] calls, int pStake)
+        public double Prizes(int[] pUsernums, int[] calls)
         {
-            playerClass.UserStake = pStake;
+            //playerClass.UserStake = pStake;
 
 
             double[] multiplier = { 0, 0, 0, 1, 1.25, 1.5, 2 };
@@ -117,7 +117,8 @@ namespace Server
 
             if (matchedNumbers >= 3 && matchedNumbers < 6)
             {
-                prize = multiplier[matchedNumbers] * pStake;
+                prize = multiplier[matchedNumbers] * ServerSetup.client.Userstake;
+              
                 Console.WriteLine("You matched" + matchedNumbers + "numbers");
                 Console.WriteLine("Congrats, you win £" + prize);
             }
@@ -131,16 +132,17 @@ namespace Server
                 Console.WriteLine("You didn't match 3 or more numbers :(");
                 Console.WriteLine("Better luck next time");
             }
+            return prize;
         }
 
         public void PlayGame()
         {
 
             sqlclass.DBplayerInsert();
-            playerClass.Stake();
-            Program.Lotteryclass.ExistingGame(playerClass.UserStake);
+            //playerClass.Stake();
+            //Program.Lotteryclass.ExistingGame(playerClass.UserStake);
 
-            sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
+            //sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
         }
     }
 }

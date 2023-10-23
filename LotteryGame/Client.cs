@@ -5,6 +5,9 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace LotteryGame
 {
@@ -42,32 +45,52 @@ namespace LotteryGame
                         // that we are connected
                         Console.WriteLine("Socket connected to -> {0} ",
                                     sender.RemoteEndPoint.ToString());
+                    //List<string> messages = new List<string>();
+                    //messages.Add(Program.Player.Playerusername);
+                    //messages.Add(Program.Player.UserStake.ToString());
+                    //messages.Add(string.Join(",", Program.Player.UserNums));
+                    // Creation of message that
+                    // we will send to Server
+                    string usernums = string.Join(",", Program.Player.UserNums);
+                    byte[] messageSent = Encoding.ASCII.GetBytes("Test Client<EOF>");
 
-                        // Creation of message that
-                        // we will send to Server
-                        byte[] messageSent = Encoding.ASCII.GetBytes("Test Client<EOF>");
-                        
-                    List<string> messages = new List<string>();
-                    messages.Add(Program.Player.Playerusername);
-                    messages.Add(Program.Player.UserStake.ToString());
-                    messages.Add(string.Join(",", Program.Player.UserNums));
-                    int byteSent = sender.Send(messageSent);
+                    byte[] username = Encoding.ASCII.GetBytes(Program.Player.Playerusername);
+                    byte[] userstake = Encoding.ASCII.GetBytes(Program.Player.UserStake.ToString());
+                    byte[] usernumbers = Encoding.ASCII.GetBytes(usernums);
+                    Player player = new Player()
+                    {
+                        Playerusername = Program.Player.Playerusername,
+                        UserStake = Program.Player.UserStake,
+                        UserNums = Program.Player.UserNums
+                    };
+
+                   string jsonstring = JsonConvert.SerializeObject(player);
+                    byte[] data = Encoding.ASCII.GetBytes(jsonstring);
+                    sender.Send(data);
+
+                    //int byteSent1 = sender.Send(username);
+                    //int byteSent2 = sender.Send(userstake);
+                    //int byteSent3 = sender.Send(usernumbers);
+                    //int byteSent = sender.Send(messageSent);
+                    
                     // Data buffer
                     byte[] messageReceived = new byte[1024];
-
-                        // We receive the message using 
-                        // the method Receive(). This 
-                        // method returns number of bytes
-                        // received, that we'll use to 
-                        // convert them to string
-                        int byteRecv = sender.Receive(messageReceived);
-                        Console.WriteLine("Message from Server -> {0}",
-                            Encoding.ASCII.GetString(messageReceived,
-                                                        0, byteRecv));
-
-                        // Close Socket using 
-                        // the method Close()
-                        sender.Shutdown(SocketShutdown.Both);
+                    
+                    // We receive the message using 
+                    // the method Receive(). This 
+                    // method returns number of bytes
+                    // received, that we'll use to 
+                    // convert them to string
+                    int byteRecv = sender.Receive(messageReceived);
+                    string serverdata = null;
+                    serverdata += Encoding.ASCII.GetString(messageReceived,
+                                                   0, byteRecv);
+                    Console.WriteLine("Message from Server -> {0}" +
+                            serverdata);
+                    
+                    // Close Socket using 
+                    // the method Close()
+                    sender.Shutdown(SocketShutdown.Both);
                         sender.Close();
                     }
 

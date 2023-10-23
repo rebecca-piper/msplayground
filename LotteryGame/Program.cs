@@ -3,6 +3,10 @@ using System.Data.Common;
 using System.Numerics;
 using Microsoft.Data.SqlClient;
 using System.Threading;
+using System.Text;
+using System.Reflection;
+using System.Net.Sockets;
+using System.Net;
 
 namespace LotteryGame
 {
@@ -20,7 +24,7 @@ namespace LotteryGame
 
         static void Main(string[] args)
         {
-            client.ExecuteClient();
+           
             var menuOption = 0;
             while (true)
             {
@@ -94,8 +98,11 @@ namespace LotteryGame
 
                             //lotteryclass.SetTimer();
                             player.GetPlayerRequest();
+                            client.ExecuteClient();
                             
                             
+                           
+
                             break;
                             default:
                                 Console.WriteLine("Press any key to exit");

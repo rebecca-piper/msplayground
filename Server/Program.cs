@@ -8,9 +8,15 @@ namespace Server
 {
     internal class Program
     {
+        private static Lottery lottery = new Lottery();
+
+        public static Lottery Lottery { get => lottery; set => lottery = value; }
+
         static void Main(string[] args)
         {
             ServerSetup serversetup = new ServerSetup();
+            
+            lottery.SetTimer();
             serversetup.ExecuteServer();
         }
     }
