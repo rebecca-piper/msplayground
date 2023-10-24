@@ -12,50 +12,48 @@ namespace Server
 {
 
     public class Lottery : Game
-    {
+    {  
+        double currentPot;
+        private static List<Clients> clients = new List<Clients>();
+        
+        public double CurrentPot { get => currentPot; set => currentPot = value; }
+        internal static List<Clients> Clients { get => clients; set => clients = value; }
 
-        private int[] userNums = new int[6];
-        double pot;
-
-        public double Pot { get => pot; set => pot = value; }
-        public int[] UserNums { get => userNums; set => userNums = value; }
-
-
-
-
-        public void ExistingGame(int pStake)
-        {
-
-            //PlayerClass.UserStake = pStake;
-            Sqlclass.ExistingGame();
-
-            //GetUserNumbers();
-            Prizes(UserNums, Sqlclass.callsArr);
+        public void PlayExistingGame()
+        {            
+            Sqlclass.GetExistingGame();
+            currentPot = Game.Sqlclass.StoredPot + ServerSetup.client.Userstake;
+            GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
+            ServerSetup.client.Prize = Prize;
+            Clients.Add(ServerSetup.client);
+            //Sqlclass.DBgameinsert(ServerSetup.client.UserNums, Sqlclass.callsArr);
         }
 
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
 
             //sqlclass.DBgameinsert(userNums, RandomNums, Prize);
-            //Prizes(UserNums, sqlclass.callsArr, PlayerClass.UserStake);
-            //byte[] prize = Encoding.ASCII.GetBytes(Prizes(ServerSetup.client.UserNums, Game.Sqlclass.CallsArr).ToString());;
-            byte[] prize = Encoding.ASCII.GetBytes(Program.Lottery.Prize.ToString());
+
             byte[] output = Encoding.ASCII.GetBytes("You matched" + Program.Lottery.MatchedNumbers + "numbers");
-
-
-            
-            foreach (Socket socket in ServerSetup.Sockets) // Repeat for each connected client (socket held in a dynamic array)
+            byte[] prize = null;
+            List<byte[]> prizes = null;
+            prizes = new List<byte[]>();
+            foreach (Clients client in clients)
             {
-
-                socket.Send(prize);
-                ServerSetup.Socket.Send(output);
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
+                prize = Encoding.ASCII.GetBytes(client.Prize.ToString());
+                prizes.Add(prize);             
             }
-            
-           
-            //ServerSetup.ClientSocket.Shutdown(SocketShutdown.Both);
-            //ServerSetup.ClientSocket.Close();
+
+            for (int i = 0; i < ServerSetup.Sockets.Count; i++)
+            {
+                ServerSetup.Sockets[0].Send(prizes[0]);
+            }
+            //socket.Send(output);
+            //socket.Shutdown(SocketShutdown.Both);
+            //socket.Close();
+
+
+            ServerSetup.Sockets.Clear();
             GetRandomNumbers(5);
             Sqlclass.NewLotteryTimer(RandomNums);
             
@@ -64,7 +62,7 @@ namespace Server
         public void SetTimer()
         {
 
-            System.Timers.Timer timer = new System.Timers.Timer(30000);
+            System.Timers.Timer timer = new System.Timers.Timer(60000);
 
             timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
             timer.AutoReset = true;

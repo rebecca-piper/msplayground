@@ -11,12 +11,12 @@ namespace LotteryGame
         string playerusername;
        
         int userStake;
-        int[] stakeArr = new int[5];
+        
         private int[] userNums = new int[6];
         public string Playerusername { get => playerusername; set => playerusername = value; }
      
         public int UserStake { get => userStake; set => userStake = value; }
-        public int[] StakeArr { get => stakeArr; set => stakeArr = value; }
+      
         public int[] UserNums { get => userNums; set => userNums = value; }
 
         public void GetPlayerName()
@@ -53,7 +53,7 @@ namespace LotteryGame
                 }
                 else
                 {
-                    //pot = SQLclass.StoredPot + userStake;
+            
                     break;
                 }
             }
@@ -105,7 +105,7 @@ namespace LotteryGame
         }
         public void GetPlayerRequest()
         {
-            GetPlayerName();
+            Program.Player.GetPlayerName();
             GetStake();
             GetUserNumbers();
         }

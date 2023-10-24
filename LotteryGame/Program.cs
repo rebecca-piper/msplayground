@@ -38,7 +38,7 @@ namespace LotteryGame
 
                         menuOption = Convert.ToInt32(Console.ReadLine());
                      
-                }
+                    }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Invalid input. Please use numbers only");
@@ -51,29 +51,29 @@ namespace LotteryGame
                     }
                     else
                     {
-                        switch (menuOption)
-                        {
-                            case 1:
-                            //        SQLclass.DBplayerInsert();
-                            //        Console.WriteLine("Welcome to the lottery");
-                            //        Console.WriteLine("------------------------");
-                            //        Console.WriteLine("You will be asked to enter 6 numbers.");
-                            //        Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-                            //        lotteryclass.GetUserNumbers();
-                            //        Console.WriteLine("Numbers well received");
-                            //        Console.WriteLine("------------------------");
-                            //        Console.WriteLine("Lottery Numbers");
-                            //        lotteryclass.GetRandomNumbers(menuOption);
-                            
-                            //lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
-                            //        SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
-                            //        break;
-                            case 2:
-                            
+                    switch (menuOption)
+                    {
+                        case 1:
+                        //        SQLclass.DBplayerInsert();
+                        //        Console.WriteLine("Welcome to the lottery");
+                        //        Console.WriteLine("------------------------");
+                        //        Console.WriteLine("You will be asked to enter 6 numbers.");
+                        //        Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
+                        //        lotteryclass.GetUserNumbers();
+                        //        Console.WriteLine("Numbers well received");
+                        //        Console.WriteLine("------------------------");
+                        //        Console.WriteLine("Lottery Numbers");
+                        //        lotteryclass.GetRandomNumbers(menuOption);
+
+                        //lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
+                        //        SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
+                        //        break;
+                        case 2:
+
                             //player.PlayerName();
                             //    SQLclass.PreviewGames();
-                                break;
-                            case 3:
+                            break;
+                        case 3:
                             //tclass.CreateObject();
                             //tclass.CreateThreads();
                             ////SQLclass.DBplayerInsert();
@@ -82,8 +82,8 @@ namespace LotteryGame
 
                             ////SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
                             //lotteryclass.PlayGame();
-                                break;
-                             case 4:
+                            break;
+                        case 4:
 
                             //lotteryclass.AutoPlay();
 
@@ -93,22 +93,18 @@ namespace LotteryGame
                             //SQLclass.DBplayerInsert();
                             //player.Stake();
 
-
                             //lotteryclass.ExistingGame(player.UserStake);
 
                             //lotteryclass.SetTimer();
                             player.GetPlayerRequest();
                             client.ExecuteClient();
-                            
-                            
-                           
 
                             break;
-                            default:
-                                Console.WriteLine("Press any key to exit");
-                                Console.ReadKey();
-                                Environment.Exit(0);
-                                break;
+                        default:
+                            Console.WriteLine("Press any key to exit");
+                            Console.ReadKey();
+                            Environment.Exit(0);
+                            break;
                         }
                     }
 

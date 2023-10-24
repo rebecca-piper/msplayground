@@ -13,10 +13,9 @@ namespace LotteryGame
 {
     internal class Client
     {
-
             // ExecuteClient() Method
            public  void ExecuteClient()
-            {
+           {
 
                 try
                 {
@@ -45,10 +44,7 @@ namespace LotteryGame
                         // that we are connected
                         Console.WriteLine("Socket connected to -> {0} ",
                                     sender.RemoteEndPoint.ToString());
-                    //List<string> messages = new List<string>();
-                    //messages.Add(Program.Player.Playerusername);
-                    //messages.Add(Program.Player.UserStake.ToString());
-                    //messages.Add(string.Join(",", Program.Player.UserNums));
+                 
                     // Creation of message that
                     // we will send to Server
                     string usernums = string.Join(",", Program.Player.UserNums);
@@ -64,34 +60,33 @@ namespace LotteryGame
                         UserNums = Program.Player.UserNums
                     };
 
-                   string jsonstring = JsonConvert.SerializeObject(player);
+                    string jsonstring = JsonConvert.SerializeObject(player);
                     byte[] data = Encoding.ASCII.GetBytes(jsonstring);
                     sender.Send(data);
 
-                    //int byteSent1 = sender.Send(username);
-                    //int byteSent2 = sender.Send(userstake);
-                    //int byteSent3 = sender.Send(usernumbers);
-                    //int byteSent = sender.Send(messageSent);
-                    
-                    // Data buffer
-                    byte[] messageReceived = new byte[1024];
-                    
-                    // We receive the message using 
-                    // the method Receive(). This 
-                    // method returns number of bytes
-                    // received, that we'll use to 
-                    // convert them to string
-                    int byteRecv = sender.Receive(messageReceived);
                     string serverdata = null;
-                    serverdata += Encoding.ASCII.GetString(messageReceived,
-                                                   0, byteRecv);
+                    while (true)
+                    {
+                        // Data buffer
+                        byte[] messageReceived = new byte[1024];
+
+                        // We receive the message using 
+                        // the method Receive(). This 
+                        // method returns number of bytes
+                        // received, that we'll use to 
+                        // convert them to string
+                        // Close Socket using 
+                        // the method Close()
+                        int byteRecv = sender.Receive(messageReceived);
+                        serverdata += Encoding.ASCII.GetString(messageReceived,
+                                                       0, byteRecv);
+                    }
+                   
                     Console.WriteLine("Message from Server -> {0}" +
                             serverdata);
-                    
-                    // Close Socket using 
-                    // the method Close()
+
                     sender.Shutdown(SocketShutdown.Both);
-                        sender.Close();
+                     sender.Close();
                     }
 
                     // Manage of Socket's Exceptions
@@ -109,16 +104,16 @@ namespace LotteryGame
 
                     catch (Exception e)
                     {
-                        Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                        Console.WriteLine("Error in receiving messages from server", e.ToString());
                     }
                 }
 
                 catch (Exception e)
                 {
 
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine(e.ToString() + "Unexcpeted error on Client Execution");
                 }
-            }
-        }
+           }
     }
+}
 

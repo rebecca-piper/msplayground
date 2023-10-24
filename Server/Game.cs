@@ -26,7 +26,6 @@ namespace Server
         public double Prize { get => prize; set => prize = value; }
         public int[] UserrandomNums { get => userrandomNums; set => userrandomNums = value; }
 
-
         public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
         public static SQLdata Sqlclass { get => sqlclass; set => sqlclass = value; }
 
@@ -88,7 +87,7 @@ namespace Server
             }
         }
 
-        public double Prizes(int[] pUsernums, int[] calls)
+        public double GetPrizes(int[] pUsernums, int[] calls)
         {
             //playerClass.UserStake = pStake;
 
@@ -125,25 +124,17 @@ namespace Server
             else if (matchedNumbers == 6)
             {
                 Console.WriteLine("You matched" + matchedNumbers + "numbers");
-                Console.WriteLine("Congrats, you won the jackpot £" + sqlclass.StoredPot);
+                Console.WriteLine("Congrats, you won the jackpot £" + Program.Lottery.CurrentPot);
             }
             else
             {
+                prize = 0;
                 Console.WriteLine("You didn't match 3 or more numbers :(");
                 Console.WriteLine("Better luck next time");
             }
             return prize;
         }
 
-        public void PlayGame()
-        {
-
-            sqlclass.DBplayerInsert();
-            //playerClass.Stake();
-            //Program.Lotteryclass.ExistingGame(playerClass.UserStake);
-
-            //sqlclass.DBgameinsert(Program.Lotteryclass.UserNums, Program.Lotteryclass.RandomNums, Program.Lotteryclass.Prize);
-        }
     }
 }
 

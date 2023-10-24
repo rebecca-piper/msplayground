@@ -41,63 +41,9 @@ namespace Server
         //    builder.TrustServerCertificate = true;
         //}
 
-        public void DBplayerInsert()
-        {
-
-
-            bool isValidInput = false;
-
-            while (!isValidInput)
-            {
-               
-                int duplicate = 0;
-                try
-                {
-                    using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                    {
-                        using (SqlCommand command = new SqlCommand("dbo.playerproc", connection))
-                        {
-                            connection.Open();
-                            //command.Parameters.Add(new SqlParameter("@player_username", SqlDbType.VarChar, 30)).Value = playerusername;
-                            command.Parameters.AddWithValue("@player_username", ServerSetup.Client.Playerusername);
-                            command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
-                            command.CommandType = CommandType.StoredProcedure;
-                            command.ExecuteNonQuery();
-                            duplicate = (int)command.Parameters["@duplicate"].Value;
-                        }
-                    }
-                    if (duplicate == -1)
-                    {
-
-                        Console.WriteLine("Username is already used, please try again");
-
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine("SQL error in inserting player" + e.ToString());
-                }
-                catch (InvalidOperationException e)
-                {
-                    Console.WriteLine("Connection error in inserting player" + e);
-                }
-            }
-
-
-        }
-
+  
         public void NewLotteryInsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes, double pPot)
         {
-
-            
-
-
 
             try
             {
@@ -133,13 +79,8 @@ namespace Server
                 Console.WriteLine("Connection error in inserting game" + e);
             }
         }
-        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes)
+        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers)
         {
-
-           
-
-
-
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -149,9 +90,9 @@ namespace Server
                     using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
                     {
 
-                        //command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
+                        command.Parameters.AddWithValue("@player_username", ServerSetup.client.Playerusername);
                         command.Parameters.AddWithValue("@picks", string.Join(",", ServerSetup.client.UserNums));
-                        command.Parameters.AddWithValue("@prizes", pPrizes);
+                        command.Parameters.AddWithValue("@prizes", Program.Lottery.Prize);
                         command.CommandType = CommandType.StoredProcedure;
                         command.ExecuteNonQuery();
 
@@ -221,7 +162,7 @@ namespace Server
             }
         }
 
-        public void ExistingGame()
+        public void GetExistingGame()
         {
 
             var lotteryID = 0;
@@ -293,7 +234,13 @@ namespace Server
                         command.ExecuteNonQuery();
 
                     }
+                    using (SqlCommand command = new SqlCommand("dbo.potproc", connection))
+                    {
+                        command.Parameters.AddWithValue("@pot", 0);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
 
+                    }
 
                 }
             }
