@@ -28,7 +28,9 @@ namespace LotteryGame
         private static int lotteryID;
         private static string picks;
         private static int prize;
+        private static int duplicate;
 
+        public  int Duplicate { get => duplicate; set => duplicate = value; }
         public  string Calls { get => calls; set => calls = value; }
         public  int PlayerID { get => playerID; set => playerID = value; }
         public int LotteryID { get => lotteryID; set => lotteryID = value; }
@@ -45,7 +47,7 @@ namespace LotteryGame
             while (!isValidInput)
             {
                 Program.Player.GetPlayerName();
-                int duplicate = 0;
+               
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -61,9 +63,10 @@ namespace LotteryGame
                             duplicate = (int)command.Parameters["@duplicate"].Value;
                         }
                     }
-                    if (duplicate == -1)
+                    if (duplicate == -2)
                     {
-                        Console.WriteLine("Username is already used, please try again");
+                        Console.WriteLine("Username is already registered");
+                        break;
                     }
                     else
                     {
@@ -106,8 +109,9 @@ namespace LotteryGame
                         prize = (int)command.Parameters["@prizes"].Value;
                         calls = (string)command.Parameters["@calls"].Value;
                         string[] s1 = picks.Split(',');
+                        string[] s2 = calls.Split(',');
                         picksArr = Array.ConvertAll(s1, n => int.Parse(n));
-                        callsArr = Array.ConvertAll(s1, n => int.Parse(n));
+                        callsArr = Array.ConvertAll(s2, n => int.Parse(n));
                      
                         connection.Close();
 

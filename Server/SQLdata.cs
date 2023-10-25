@@ -18,6 +18,7 @@ namespace Server
             IntegratedSecurity = true,
             TrustServerCertificate = true
         };
+
         int[] randomnumbers = new int[6];
         string calls;
         public int[] callsArr = new int[6];
@@ -95,56 +96,6 @@ namespace Server
                 Console.WriteLine("Connection error in inserting game" + e);
             }
 
-        }
-        public void PreviewGames()
-        {
-            int playerID = 0;
-            int lotteryID = 0;
-            string picks = "";
-            int prizes;
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand("dbo.previewgame", connection))
-                    {
-                        //command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
-                        command.Parameters.Add("@player_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        command.Parameters.Add("@lottery_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        command.Parameters.Add("@picks", SqlDbType.VarChar, 30).Direction = ParameterDirection.Output;
-                        command.Parameters.Add("@prizes", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        command.Parameters.Add("@calls", SqlDbType.VarChar, 30).Direction = ParameterDirection.Output;
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
-
-                        playerID = (int)command.Parameters["@player_id"].Value;
-                        lotteryID = (int)command.Parameters["@lottery_id"].Value;
-                        picks = (string)command.Parameters["@picks"].Value;
-                        string[] s1 = calls.Split(',');
-                        picksArr = Array.ConvertAll(s1, n => int.Parse(n));
-                        prizes = (int)command.Parameters["@prizes"].Value;
-                        Console.WriteLine(playerID.ToString());
-                        Console.WriteLine(lotteryID.ToString());
-                        Console.WriteLine(picks.ToString());
-                        Console.WriteLine(prizes.ToString());
-                        connection.Close();
-
-                    }
-                }
-
-            }
-
-            catch (SqlException e)
-            {
-                Console.WriteLine("SQL error in previewing game" + e.ToString());
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine("Connection error in previewing game" + e);
-            }
         }
 
         public void GetExistingGame()

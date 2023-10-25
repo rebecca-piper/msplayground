@@ -25,7 +25,6 @@ namespace LotteryGame
 
         static void Main(string[] args)
         {
-           
             var menuOption = 0;
             while (true)
             {
