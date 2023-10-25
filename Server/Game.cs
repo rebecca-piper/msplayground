@@ -13,14 +13,10 @@ namespace Server
     public class Game
     {
         private static SQLdata sqlclass = new SQLdata();
-
         int[] randomNums = new int[6];
         int[] userrandomNums = new int[6];
-
         double prize;
-
         double[] multiplier = new double[7];
-
         int matchedNumbers;
         public int[] RandomNums { get => randomNums; set => randomNums = value; }
         public double Prize { get => prize; set => prize = value; }
@@ -31,7 +27,6 @@ namespace Server
 
         public int[] GetRandomNumbers(int menuOption)
         {
-
             int min = 1;
             int max = 20;
             int[] range = new int[max - min + 1];
@@ -43,10 +38,7 @@ namespace Server
 
             for (int i = 0; i < range.Length; i++)
             {
-
                 int numIndex = rnd.Next(range.Length);
-
-
                 int temp = range[i];
                 range[i] = range[numIndex];
                 range[numIndex] = temp;
@@ -60,10 +52,7 @@ namespace Server
 
             for (int i = 0; i < range.Length; i++)
             {
-
                 int numIndex = rnd.Next(range.Length);
-
-
                 int temp = range[i];
                 range[i] = range[numIndex];
                 range[numIndex] = temp;
@@ -79,7 +68,6 @@ namespace Server
         }
         public void AutoPlay()
         {
-
             for (int i = 0; i < 10; i++)
             {
                 GetRandomNumbers(4);
@@ -89,9 +77,6 @@ namespace Server
 
         public double GetPrizes(int[] pUsernums, int[] calls)
         {
-            //playerClass.UserStake = pStake;
-
-
             double[] multiplier = { 0, 0, 0, 1, 1.25, 1.5, 2 };
             Console.WriteLine("-----------");
             Console.WriteLine("Winning numbers");
@@ -106,8 +91,6 @@ namespace Server
                 winningnums = pUsernums.Intersect(randomNums).ToArray();
 
             }
-
-
             matchedNumbers = winningnums.Count();
             foreach (var number in winningnums)
             {

@@ -23,12 +23,14 @@ namespace Server
         private static Socket clientSocket;
         private static List<Socket> sockets;
         private static Socket socket;
-        
+        private static readonly Dictionary<Socket, dynamic> clients = new Dictionary<Socket, dynamic>();
         public static Clients Client { get => client; set => client = value; }
  
         public static Socket ClientSocket { get => clientSocket; set => clientSocket = value; }
         public static List<Socket> Sockets { get => sockets; set => sockets = value; }
         public static Socket Socket { get => socket; set => socket = value; }
+
+        internal static Dictionary<Socket, dynamic> Clients => clients;
 
         public void ExecuteServer()
         {
@@ -104,9 +106,8 @@ namespace Server
                    
                     Program.Lottery.PlayExistingGame();
                     Console.WriteLine("Text received -> {0} ", data);
-                    //Console.WriteLine(client.Playerusername);
-                    //Console.WriteLine(client.Userstake);
-                  
+                 
+                  clients.Add(socket, client);
                     byte[] message = Encoding.ASCII.GetBytes("Test Server");
 
                     // Send a message to Client 

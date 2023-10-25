@@ -14,13 +14,14 @@ namespace LotteryGame
     {
         //private static Lottery lotteryclass = new Lottery();
         private static Player player = new Player();
+        private static SQLdata sqlclass = new SQLdata();
         //public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
         //public static SQLdata SQLclass { get => sQLclass; set => sQLclass = value; }
         public static Player Player { get => player; set => player = value; }
         //public static Threads Tclass { get => tclass; set => tclass = value; }
        public static Client client = new Client();
         //private static Threads tclass = new Threads();
-        //private static SQLdata sQLclass = new SQLdata();
+     
 
         static void Main(string[] args)
         {
@@ -28,22 +29,20 @@ namespace LotteryGame
             var menuOption = 0;
             while (true)
             {
-                
                     try
                     {
-                        Console.WriteLine("New game: Press 1 to play a new game");
-                        Console.WriteLine("Preview games: Press 2 to preview all your games");
-                        Console.WriteLine("Existing games: Press 3 to play existing game");
-                        Console.WriteLine("Exit: Press any number to exit");
-
+                    //Console.WriteLine("New game: Press 1 to play a new game");
+                    //Console.WriteLine("Preview games: Press 2 to preview all your games");
+                    //Console.WriteLine("Existing games: Press 3 to play existing game");
+                    //Console.WriteLine("Exit: Press any number to exit");
+                    Console.WriteLine("Press 2 to reveal the latest lottery you played");
+                    Console.WriteLine("Press 5 to join a new lottery");
                         menuOption = Convert.ToInt32(Console.ReadLine());
-                     
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Invalid input. Please use numbers only");
                     }
-
 
                     if (menuOption > 5)
                     {
@@ -70,8 +69,9 @@ namespace LotteryGame
                         //        break;
                         case 2:
 
-                            //player.PlayerName();
-                            //    SQLclass.PreviewGames();
+                            player.GetPlayerName();
+                            sqlclass.PreviewGames();
+                            client.GetPlayerGame();
                             break;
                         case 3:
                             //tclass.CreateObject();
@@ -107,7 +107,6 @@ namespace LotteryGame
                             break;
                         }
                     }
-
             }
         }
        

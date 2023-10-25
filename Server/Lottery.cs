@@ -26,34 +26,52 @@ namespace Server
             GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
             ServerSetup.client.Prize = Prize;
             Clients.Add(ServerSetup.client);
-            //Sqlclass.DBgameinsert(ServerSetup.client.UserNums, Sqlclass.callsArr);
+            Sqlclass.DBgameinsert(ServerSetup.client.UserNums, Sqlclass.callsArr);
+            Sqlclass.UpdatePot();
         }
 
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
-
-            //sqlclass.DBgameinsert(userNums, RandomNums, Prize);
-
-            byte[] output = Encoding.ASCII.GetBytes("You matched" + Program.Lottery.MatchedNumbers + "numbers");
             byte[] prize = null;
-            List<byte[]> prizes = null;
-            prizes = new List<byte[]>();
-            foreach (Clients client in clients)
+  
+            //prize = Encoding.ASCII.GetBytes(ServerSetup.client.Prize.ToString());
+            foreach (Socket socket in ServerSetup.Clients.Keys)
             {
-                prize = Encoding.ASCII.GetBytes(client.Prize.ToString());
-                prizes.Add(prize);             
-            }
 
-            for (int i = 0; i < ServerSetup.Sockets.Count; i++)
-            {
-                ServerSetup.Sockets[0].Send(prizes[0]);
+              
+                if (ServerSetup.Clients[socket].Prize == 0)
+                {
+                    byte[] output = Encoding.ASCII.GetBytes("You didn't win anything");
+                    socket.Send(output);
+                }
+                else
+                {
+                    prize = Encoding.ASCII.GetBytes("Congrats you won £" + ServerSetup.Clients[socket].Prize.ToString());
+                    socket.Send(prize);
+                }
+               
+              
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
             }
-            //socket.Send(output);
+            //List<byte[]> prizes = null;
+            //prizes = new List<byte[]>();
+            //foreach (Clients client in clients)
+            //{
+            //    prize = Encoding.ASCII.GetBytes(client.Prize.ToString());
+            //    prizes.Add(prize);
+            //}
+
+            //for (int i = 0; i < ServerSetup.Sockets.Count; i++)
+            //{
+            //    ServerSetup.Sockets[i].Send(prizes[i]);
+            //}
+
             //socket.Shutdown(SocketShutdown.Both);
             //socket.Close();
 
 
-            ServerSetup.Sockets.Clear();
+            ServerSetup.Clients.Clear();
             GetRandomNumbers(5);
             Sqlclass.NewLotteryTimer(RandomNums);
             
