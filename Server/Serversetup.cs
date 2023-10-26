@@ -29,7 +29,6 @@ namespace Server
         public static Socket ClientSocket { get => clientSocket; set => clientSocket = value; }
         public static List<Socket> Sockets { get => sockets; set => sockets = value; }
         public static Socket Socket { get => socket; set => socket = value; }
-
         internal static Dictionary<Socket, dynamic> Clients => clients;
 
         public void ExecuteServer()
@@ -41,41 +40,33 @@ namespace Server
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
-            sockets = new List<Socket>();
-            
-
+            sockets = new List<Socket>();            
             try
             {
                 // Creation TCP/IP Socket using 
                 // Socket Class Constructor
-                clientSocket = new Socket(ipAddr.AddressFamily,
-                            SocketType.Stream, ProtocolType.Tcp);
+                clientSocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 // Using Bind() method we associate a
                 // network address to the Server Socket
                 // All client that will connect to this 
                 // Server Socket must know this network
                 // Address
                 clientSocket.Bind(localEndPoint);
-
                 // Using Listen() method we create 
                 // the Client list that will want
                 // to connect to Server
                 clientSocket.Listen(10);
                 while (true)
                 {
-
                     try
                     {
                         Console.WriteLine("Waiting connection ... ");
-
                         // Suspend while waiting for
                         // incoming connection Using 
                         // Accept() method the server 
                         // will accept connection of client
-
                         socket = clientSocket.Accept();
                         sockets.Add(socket);
-
                     }
                     catch (SocketException e)
                     {
@@ -105,11 +96,9 @@ namespace Server
                     }
                    
                     Program.Lottery.PlayExistingGame();
-                    Console.WriteLine("Text received -> {0} ", data);
-                 
-                  clients.Add(socket, client);
+                    Console.WriteLine("Text received -> {0} ", data);               
+                    clients.Add(socket, client);
                     byte[] message = Encoding.ASCII.GetBytes("Test Server");
-
                     // Send a message to Client 
                     // using Send() method
                     //clientSocket.Send(message);
@@ -117,8 +106,7 @@ namespace Server
                     // Close client Socket using the
                     // Close() method. After closing,
                     // we can use the closed Socket 
-                    // for a new Client Connection
-                
+                    // for a new Client Connection                
                 }
             }
 

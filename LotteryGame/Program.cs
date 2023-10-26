@@ -11,18 +11,12 @@ using System.Net;
 namespace LotteryGame
 {
     class Program
-    {
-        //private static Lottery lotteryclass = new Lottery();
+    {    
         private static Player player = new Player();
-        private static SQLdata sqlclass = new SQLdata();
-        //public static Lottery Lotteryclass { get => lotteryclass; set => lotteryclass = value; }
-        //public static SQLdata SQLclass { get => sQLclass; set => sQLclass = value; }
+        private static SQLClient sqlclass = new SQLClient();
         public static Player Player { get => player; set => player = value; }
         //public static Threads Tclass { get => tclass; set => tclass = value; }
-       public static Client client = new Client();
-        //private static Threads tclass = new Threads();
-     
-
+        public static Client client = new Client();      
         static void Main(string[] args)
         {
             var menuOption = 0;
@@ -32,18 +26,18 @@ namespace LotteryGame
                     {
                     //Console.WriteLine("New game: Press 1 to play a new game");
                     //Console.WriteLine("Preview games: Press 2 to preview all your games");
-                    //Console.WriteLine("Existing games: Press 3 to play existing game");
-                    //Console.WriteLine("Exit: Press any number to exit");
-                    Console.WriteLine("Press 2 to reveal the latest lottery you played");
-                    Console.WriteLine("Press 5 to join a new lottery");
-                        menuOption = Convert.ToInt32(Console.ReadLine());
+                    //Console.WriteLine("Existing games: Press 3 to play existing game");                  
+                        Console.WriteLine("Press 1 to join a new lottery");
+                        Console.WriteLine("Press 2 to reveal the latest lottery you played");
+                        Console.WriteLine("Exit: Press any number to exit");
+                    menuOption = Convert.ToInt32(Console.ReadLine());
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Invalid input. Please use numbers only");
                     }
 
-                    if (menuOption > 5)
+                    if (menuOption > 2)
                     {
                         Environment.Exit(0);
                     }
@@ -52,22 +46,23 @@ namespace LotteryGame
                     switch (menuOption)
                     {
                         case 1:
-                        //        SQLclass.DBplayerInsert();
-                        //        Console.WriteLine("Welcome to the lottery");
-                        //        Console.WriteLine("------------------------");
-                        //        Console.WriteLine("You will be asked to enter 6 numbers.");
-                        //        Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
-                        //        lotteryclass.GetUserNumbers();
-                        //        Console.WriteLine("Numbers well received");
-                        //        Console.WriteLine("------------------------");
-                        //        Console.WriteLine("Lottery Numbers");
-                        //        lotteryclass.GetRandomNumbers(menuOption);
+                            //        SQLclass.DBplayerInsert();
+                            //        Console.WriteLine("Welcome to the lottery");
+                            //        Console.WriteLine("------------------------");
+                            //        Console.WriteLine("You will be asked to enter 6 numbers.");
+                            //        Console.WriteLine("You will win a prize if you match 3 or more numbers with the lottery tickets, with each prize being bigger with the more numbers matched!");
+                            //        lotteryclass.GetUserNumbers();
+                            //        Console.WriteLine("Numbers well received");
+                            //        Console.WriteLine("------------------------");
+                            //        Console.WriteLine("Lottery Numbers");
+                            //        lotteryclass.GetRandomNumbers(menuOption);
 
-                        //lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
-                        //        SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
-                        //        break;
+                            //lotteryclass.Prizes(lotteryclass.UserNums, SQLclass.CallsArr, player.UserStake);
+                            //        SQLclass.NewLotteryInsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize, lotteryclass.Pot);
+                            //        break;
+                            player.GetPlayerRequest();
+                            break;
                         case 2:
-
                             player.GetPlayerName();
                             sqlclass.PreviewGames();
                             client.GetPlayerGame();
@@ -78,26 +73,11 @@ namespace LotteryGame
                             ////SQLclass.DBplayerInsert();
                             ////player.Stake();
                             ////lotteryclass.ExistingGame(player.UserStake);
-
                             ////SQLclass.DBgameinsert(lotteryclass.UserNums, lotteryclass.RandomNums, lotteryclass.Prize);
                             //lotteryclass.PlayGame();
                             break;
                         case 4:
-
                             //lotteryclass.AutoPlay();
-
-                            break;
-                        case 5:
-
-                            //SQLclass.DBplayerInsert();
-                            //player.Stake();
-
-                            //lotteryclass.ExistingGame(player.UserStake);
-
-                            //lotteryclass.SetTimer();
-                            player.GetPlayerRequest();
-                           
-
                             break;
                         default:
                             Console.WriteLine("Press any key to exit");

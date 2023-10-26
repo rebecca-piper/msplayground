@@ -13,18 +13,17 @@ namespace LotteryGame
         int userStake;
         
         private int[] userNums = new int[6];
-        private static SQLdata SQLclass = new SQLdata();
+        private static SQLClient SQLclass = new SQLClient();
         public string Playerusername { get => playerusername; set => playerusername = value; }
    
         public int UserStake { get => userStake; set => userStake = value; }
       
         public int[] UserNums { get => userNums; set => userNums = value; }
-        public static SQLdata SQLclass1 { get => SQLclass; set => SQLclass = value; }
+        public static SQLClient SQLclass1 { get => SQLclass; set => SQLclass = value; }
 
         public void GetPlayerName()
         {
             bool isValidInput = false;
-
             while (!isValidInput)
             {
                 try
@@ -41,7 +40,6 @@ namespace LotteryGame
         }
         public void GetStake()
         {
-
             int[] stakeArr = { 5, 10, 25, 50 };
             while (true)
             {
@@ -58,7 +56,6 @@ namespace LotteryGame
                         }
                         else
                         {
-
                             break;
                         }
                     }
@@ -87,17 +84,14 @@ namespace LotteryGame
                 range[i] = min++;
             }
             for (int i = 0; i < 6; i++)
-            {
-             
+            {            
                 Console.WriteLine("Number:" + (i + 1));
-
                 bool isValidInput = false;
                 while (!isValidInput)
                 {
                     try
                     {
                         string userValue = Console.ReadLine();
-
                         if (int.TryParse(userValue, out userNum))
                         {
                             if (range.Contains(userNum) && !userNums.Contains(userNum))
@@ -112,9 +106,7 @@ namespace LotteryGame
                             else if (userNums.Contains(userNum))
                             {
                                 Console.WriteLine("Number already entered. Repeated numbers are not allowed. Please try again");
-                            }
-                            
-
+                            }                         
                         }
                         if (!range.Contains(Convert.ToInt32(userValue)))
                         {
@@ -126,7 +118,6 @@ namespace LotteryGame
                         Console.WriteLine("Invalid input. Please enter a number betweeon 0 and 20");
                     }
                 }
-
             }
         }
         public void GetPlayerRequest()

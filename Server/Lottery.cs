@@ -10,7 +10,6 @@ using System.Timers;
 
 namespace Server
 {
-
     public class Lottery : Game
     {  
         double currentPot;
@@ -47,42 +46,21 @@ namespace Server
                 {
                     prize = Encoding.ASCII.GetBytes("Congrats you won £" + ServerSetup.Clients[socket].Prize.ToString());
                     socket.Send(prize);
-                }
-               
-              
+                }             
                 socket.Shutdown(SocketShutdown.Both);
                 socket.Close();
-            }
-            //List<byte[]> prizes = null;
-            //prizes = new List<byte[]>();
-            //foreach (Clients client in clients)
-            //{
-            //    prize = Encoding.ASCII.GetBytes(client.Prize.ToString());
-            //    prizes.Add(prize);
-            //}
-
-            //for (int i = 0; i < ServerSetup.Sockets.Count; i++)
-            //{
-            //    ServerSetup.Sockets[i].Send(prizes[i]);
-            //}
-
-            //socket.Shutdown(SocketShutdown.Both);
-            //socket.Close();
+            }    
             ServerSetup.Clients.Clear();
-            GetRandomNumbers(5);
-            Sqlclass.NewLotteryTimer(RandomNums);
-            
+            GetRandomNumbers(1);
+            Sqlclass.NewLotteryTimer(RandomNums);         
             Console.WriteLine("New lottery was created at {0:HH:mm:ss.fff}:" + e.SignalTime);
         }
         public void SetTimer()
         {
-
             System.Timers.Timer timer = new System.Timers.Timer(60000);
-
             timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
             timer.AutoReset = true;
             timer.Start();
-
         }
     }
 }

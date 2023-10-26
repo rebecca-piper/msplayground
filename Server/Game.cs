@@ -21,7 +21,6 @@ namespace Server
         public int[] RandomNums { get => randomNums; set => randomNums = value; }
         public double Prize { get => prize; set => prize = value; }
         public int[] UserrandomNums { get => userrandomNums; set => userrandomNums = value; }
-
         public int MatchedNumbers { get => matchedNumbers; set => matchedNumbers = value; }
         public static SQLdata Sqlclass { get => sqlclass; set => sqlclass = value; }
 
@@ -63,7 +62,6 @@ namespace Server
                 Console.WriteLine(String.Join(", ", randomNums));
                 Console.WriteLine(String.Join(", ", userrandomNums));
             }
-
             return randomNums;
         }
         public void AutoPlay()

@@ -25,28 +25,20 @@ namespace LotteryGame
                     IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
                     IPAddress ipAddr = ipHost.AddressList[0];
                     IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
-
                     // Creation TCP/IP Socket using 
                     // Socket Class Constructor
-                    Socket sender = new Socket(ipAddr.AddressFamily,
-                            SocketType.Stream, ProtocolType.Tcp);
+                    Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     try
                     {
                         // Connect Socket to the remote 
                         // endpoint using method Connect()
                         sender.Connect(localEndPoint);
-
                         // We print EndPoint information 
-                        // that we are connected
-                        
+                        // that we are connected                      
                         // Creation of message that
                         // we will send to Server
                         string usernums = string.Join(",", Program.Player.UserNums);
                         byte[] messageSent = Encoding.ASCII.GetBytes("Test Client<EOF>");
-
-                        byte[] username = Encoding.ASCII.GetBytes(Program.Player.Playerusername);
-                        byte[] userstake = Encoding.ASCII.GetBytes(Program.Player.UserStake.ToString());
-                        byte[] usernumbers = Encoding.ASCII.GetBytes(usernums);
                         Player player = new Player()
                         {
                             Playerusername = Program.Player.Playerusername,
@@ -56,15 +48,12 @@ namespace LotteryGame
 
                         string jsonstring = JsonConvert.SerializeObject(player);
                         byte[] data = Encoding.ASCII.GetBytes(jsonstring);                                 
-                        Console.WriteLine("Socket connected to -> {0} ",
-                                    sender.RemoteEndPoint.ToString());
+                        Console.WriteLine("Socket connected to -> {0} ", sender.RemoteEndPoint.ToString());
                         Console.WriteLine("You have entered the lottery, prizes will be revealed soon");
                         sender.Send(data);
-
                         string serverdata = null;
                         // Data buffer
                         byte[] messageReceived = new byte[1024];
-
                         // We receive the message using 
                         // the method Receive(). This 
                         // method returns number of bytes
@@ -76,10 +65,7 @@ namespace LotteryGame
                         serverdata += Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
                         Console.WriteLine("Message from Server ->" + serverdata);
                         sender.Shutdown(SocketShutdown.Both);
-                        sender.Close();
-                    
-                        
-
+                        sender.Close();                
                     }
 
                     // Manage of Socket's Exceptions
@@ -110,7 +96,6 @@ namespace LotteryGame
         {
             int[] winningnums = new int[6];
             int matchedNumbers;
-
             winningnums = Player.SQLclass1.PicksArr.Intersect(Player.SQLclass1.CallsArr).ToArray();
             matchedNumbers = winningnums.Count();
             Console.WriteLine("Player ID:" + Player.SQLclass1.PlayerID.ToString());

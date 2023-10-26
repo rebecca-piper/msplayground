@@ -11,7 +11,7 @@ using System.Timers;
 namespace LotteryGame
 {
 
-    public class SQLdata
+    public class SQLClient
     {
         public static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder()
         {
@@ -73,8 +73,7 @@ namespace LotteryGame
             
         }
         public void PreviewGames()
-        {
-   
+        {  
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -102,7 +101,6 @@ namespace LotteryGame
                         callsArr = Array.ConvertAll(s2, n => int.Parse(n));
                      
                         connection.Close();
-
                     }
                 }
 
