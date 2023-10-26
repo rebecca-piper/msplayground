@@ -96,7 +96,7 @@ namespace LotteryGame
 
                             //lotteryclass.SetTimer();
                             player.GetPlayerRequest();
-                            client.ExecuteClient();
+                           
 
                             break;
                         default:

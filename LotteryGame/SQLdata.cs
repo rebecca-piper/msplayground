@@ -40,14 +40,7 @@ namespace LotteryGame
         public int[] CallsArr { get => callsArr; set => callsArr = value; }
 
         public void DBplayerInsert()
-        {
-
-            bool isValidInput = false;
-
-            while (!isValidInput)
-            {
-                Program.Player.GetPlayerName();
-               
+        {               
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
@@ -65,12 +58,7 @@ namespace LotteryGame
                     }
                     if (duplicate == -2)
                     {
-                        Console.WriteLine("Username is already registered");
-                        break;
-                    }
-                    else
-                    {
-                        break;
+                        Console.WriteLine("Username is already registered");                   
                     }
 
                 }
@@ -82,7 +70,7 @@ namespace LotteryGame
                 {
                     Console.WriteLine("Connection error in inserting player" + e);
                 }
-            }
+            
         }
         public void PreviewGames()
         {

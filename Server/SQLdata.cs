@@ -99,8 +99,7 @@ namespace Server
         }
 
         public void GetExistingGame()
-        {
-            var lotteryID = 0;
+        {    
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))

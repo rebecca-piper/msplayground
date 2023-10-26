@@ -106,8 +106,9 @@ namespace Server
             }
             else if (matchedNumbers == 6)
             {
+                prize = Program.Lottery.CurrentPot;
                 Console.WriteLine("You matched" + matchedNumbers + "numbers");
-                Console.WriteLine("Congrats, you won the jackpot £" + Program.Lottery.CurrentPot);
+                Console.WriteLine("Congrats, you won the jackpot £" + prize);
             }
             else
             {

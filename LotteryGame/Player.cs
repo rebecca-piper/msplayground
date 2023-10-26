@@ -131,9 +131,18 @@ namespace LotteryGame
         }
         public void GetPlayerRequest()
         {
-            SQLclass.DBplayerInsert();
+            GetPlayerName();          
             GetStake();
             GetUserNumbers();
+            SQLclass.DBplayerInsert();
+            if (SQLclass.Duplicate == -1)
+            {
+                Console.WriteLine("You already entered this lottery, please wait for a new one");
+            }
+            else
+            {
+                Program.client.ExecuteClient();
+            }
         }
     }
 }

@@ -14,18 +14,13 @@ namespace Server
     public class Lottery : Game
     {  
         double currentPot;
-        private static List<Clients> clients = new List<Clients>();
-        
         public double CurrentPot { get => currentPot; set => currentPot = value; }
-        internal static List<Clients> Clients { get => clients; set => clients = value; }
-
         public void PlayExistingGame()
         {            
             Sqlclass.GetExistingGame();
             currentPot = Game.Sqlclass.StoredPot + ServerSetup.client.Userstake;
             GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
             ServerSetup.client.Prize = Prize;
-            Clients.Add(ServerSetup.client);
             Sqlclass.DBgameinsert(ServerSetup.client.UserNums, Sqlclass.callsArr);
             Sqlclass.UpdatePot();
         }
@@ -33,16 +28,20 @@ namespace Server
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             byte[] prize = null;
-  
+            Sqlclass.GetExistingGame();
             //prize = Encoding.ASCII.GetBytes(ServerSetup.client.Prize.ToString());
             foreach (Socket socket in ServerSetup.Clients.Keys)
             {
-
-              
                 if (ServerSetup.Clients[socket].Prize == 0)
                 {
                     byte[] output = Encoding.ASCII.GetBytes("You didn't win anything");
                     socket.Send(output);
+                }
+                else if (Program.Lottery.MatchedNumbers == 6)
+                {
+                    ServerSetup.Clients[socket].Prize = Sqlclass.StoredPot;
+                    prize = Encoding.ASCII.GetBytes("Congrats you just won the jackpot: £" + ServerSetup.Clients[socket].Prize.ToString());
+                    socket.Send(prize);
                 }
                 else
                 {
@@ -69,8 +68,6 @@ namespace Server
 
             //socket.Shutdown(SocketShutdown.Both);
             //socket.Close();
-
-
             ServerSetup.Clients.Clear();
             GetRandomNumbers(5);
             Sqlclass.NewLotteryTimer(RandomNums);

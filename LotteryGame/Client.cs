@@ -55,13 +55,7 @@ namespace LotteryGame
                         };
 
                         string jsonstring = JsonConvert.SerializeObject(player);
-                        byte[] data = Encoding.ASCII.GetBytes(jsonstring);
-                    if (Player.SQLclass1.Duplicate == -1)
-                    {
-                        Console.WriteLine("You already entered this lottery, please wait for a new one");
-                    }
-                    else
-                    {
+                        byte[] data = Encoding.ASCII.GetBytes(jsonstring);                                 
                         Console.WriteLine("Socket connected to -> {0} ",
                                     sender.RemoteEndPoint.ToString());
                         Console.WriteLine("You have entered the lottery, prizes will be revealed soon");
@@ -83,7 +77,7 @@ namespace LotteryGame
                         Console.WriteLine("Message from Server ->" + serverdata);
                         sender.Shutdown(SocketShutdown.Both);
                         sender.Close();
-                    }
+                    
                         
 
                     }
