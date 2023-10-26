@@ -30,43 +30,43 @@ namespace Server
         public int[] CallsArr { get => callsArr; set => callsArr = value; }
         public double StoredPot { get => storedPot; set => storedPot = value; }
 
-        public void NewLotteryInsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes, double pPot)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
-                    {
-                        connection.Open();
-                        command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+        //public void NewLotteryInsert(int[] pUsernumbers, int[] pRandomNumbers, double pPrizes, double pPot)
+        //{
+        //    try
+        //    {
+        //        using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+        //        {
+        //            using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
+        //            {
+        //                connection.Open();
+        //                command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
+        //                command.CommandType = CommandType.StoredProcedure;
+        //                command.ExecuteNonQuery();
 
-                    }
-                    using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
-                    {
-                        //command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
-                        command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
-                        command.Parameters.AddWithValue("@prizes", pPrizes);
-                        command.Parameters.AddWithValue("@pot", pPot);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+        //            }
+        //            using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
+        //            {
+        //                //command.Parameters.AddWithValue("@player_username", Game.PlayerClass.Playerusername);
+        //                command.Parameters.AddWithValue("@picks", string.Join(",", pUsernumbers));
+        //                command.Parameters.AddWithValue("@prizes", pPrizes);
+        //                command.Parameters.AddWithValue("@pot", pPot);
+        //                command.CommandType = CommandType.StoredProcedure;
+        //                command.ExecuteNonQuery();
 
-                    }
+        //            }
 
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine("SQL error in inserting game" + e.ToString());
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine("Connection error in inserting game" + e);
-            }
-        }
-        public void DBgameinsert(int[] pUsernumbers, int[] pRandomNumbers)
+        //        }
+        //    }
+        //    catch (SqlException e)
+        //    {
+        //        Console.WriteLine("SQL error in inserting game" + e.ToString());
+        //    }
+        //    catch (InvalidOperationException e)
+        //    {
+        //        Console.WriteLine("Connection error in inserting game" + e);
+        //    }
+        //}
+        public void DBgameinsert()
         {
             try
             {
@@ -76,15 +76,12 @@ namespace Server
 
                     using (SqlCommand command = new SqlCommand("dbo.gamesproc", connection))
                     {
-
                         command.Parameters.AddWithValue("@player_username", ServerSetup.client.Playerusername);
                         command.Parameters.AddWithValue("@picks", string.Join(",", ServerSetup.client.UserNums));
                         command.Parameters.AddWithValue("@prizes", Program.Lottery.Prize);
                         command.CommandType = CommandType.StoredProcedure;
                         command.ExecuteNonQuery();
-
                     }
-
                 }
             }
             catch (SqlException e)
@@ -95,9 +92,7 @@ namespace Server
             {
                 Console.WriteLine("Connection error in inserting game" + e);
             }
-
         }
-
         public void GetExistingGame()
         {    
             try
@@ -120,7 +115,6 @@ namespace Server
                         string[] s1 = calls.Split(',');
                         callsArr = Array.ConvertAll(s1, n => int.Parse(n));
                     }
-
                 }
             }
             catch (SqlException e)
@@ -150,11 +144,11 @@ namespace Server
             }
             catch (SqlException e)
             {
-                Console.WriteLine("SQL error in inserting game" + e.ToString());
+                Console.WriteLine("SQL error in updating pot" + e.ToString());
             }
             catch (InvalidOperationException e)
             {
-                Console.WriteLine("Connection error in inserting game" + e);
+                Console.WriteLine("Connection error in updating pot" + e);
             }
         }
         public void NewLotteryTimer(int[] pRandomNumbers)
@@ -163,30 +157,38 @@ namespace Server
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
+                    try
                     {
-                        connection.Open();
-                        command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
-
-                    }
-                    using (SqlCommand command = new SqlCommand("dbo.potproc", connection))
+                        using (SqlCommand command = new SqlCommand("dbo.lotteryproc", connection))
+                        {
+                            connection.Open();
+                            command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.ExecuteNonQuery();
+                        }
+                    }                   
+                    catch (SqlException e)
                     {
-                        command.Parameters.AddWithValue("@pot", 0);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        Console.WriteLine("SQL error in inserting lottery" + e.ToString());
                     }
-
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand("dbo.potproc", connection))
+                        {
+                            command.Parameters.AddWithValue("@pot", 0);
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine("SQL error in inserting pot" + e.ToString());
+                    }
                 }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine("SQL error in inserting game" + e.ToString());
-            }
+            }          
             catch (InvalidOperationException e)
             {
-                Console.WriteLine("Connection error in inserting game" + e);
+                Console.WriteLine("Connection error in inserting lottery" + e);
             }
         }
     }

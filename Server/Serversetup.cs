@@ -93,20 +93,10 @@ namespace Server
                         {
                             Console.WriteLine(e.ToString() + "Error in receiving data from client");
                         }
-                    }
-                   
+                    }                  
                     Program.Lottery.PlayExistingGame();
                     Console.WriteLine("Text received -> {0} ", data);               
-                    clients.Add(socket, client);
-                    byte[] message = Encoding.ASCII.GetBytes("Test Server");
-                    // Send a message to Client 
-                    // using Send() method
-                    //clientSocket.Send(message);
-
-                    // Close client Socket using the
-                    // Close() method. After closing,
-                    // we can use the closed Socket 
-                    // for a new Client Connection                
+                    clients.Add(socket, client);          
                 }
             }
 

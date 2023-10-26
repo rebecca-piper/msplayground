@@ -41,35 +41,33 @@ namespace LotteryGame
 
         public void DBplayerInsert()
         {               
-                try
-                {
-                    using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                    {
-                        using (SqlCommand command = new SqlCommand("dbo.playerproc", connection))
-                        {
-                            connection.Open();
-                            //command.Parameters.Add(new SqlParameter("@player_username", SqlDbType.VarChar, 30)).Value = playerusername;
-                            command.Parameters.AddWithValue("@player_username", Program.Player.Playerusername);
-                            command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
-                            command.CommandType = CommandType.StoredProcedure;
-                            command.ExecuteNonQuery();
-                            duplicate = (int)command.Parameters["@duplicate"].Value;
-                        }
-                    }
-                    if (duplicate == -2)
-                    {
-                        Console.WriteLine("Username is already registered");                   
-                    }
-
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine("SQL error in inserting player" + e.ToString());
-                }
-                catch (InvalidOperationException e)
-                {
-                    Console.WriteLine("Connection error in inserting player" + e);
-                }
+            try
+            {
+                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                 {
+                     using (SqlCommand command = new SqlCommand("dbo.playerproc", connection))
+                     {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@player_username", Program.Player.Playerusername);
+                        command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
+                        duplicate = (int)command.Parameters["@duplicate"].Value;
+                     }
+                     if (duplicate == -2)
+                     {
+                        Console.WriteLine("Username is already registered");
+                     }
+                 }
+            }
+            catch (SqlException e)
+            {
+                 Console.WriteLine("SQL error in inserting player" + e.ToString());
+            }
+            catch (InvalidOperationException e)
+            {
+                  Console.WriteLine("Connection error in inserting player" + e);
+            }
             
         }
         public void PreviewGames()

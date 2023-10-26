@@ -61,11 +61,18 @@ namespace LotteryGame
                         // convert them to string
                         // Close Socket using 
                         // the method Close()
+                        try
+                        {
                         int byteRecv = sender.Receive(messageReceived);
                         serverdata += Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
                         Console.WriteLine("Message from Server ->" + serverdata);
                         sender.Shutdown(SocketShutdown.Both);
-                        sender.Close();                
+                        sender.Close();
+                        }
+                        catch (Exception e)
+                        {
+                        Console.WriteLine("Error in receiving messages from server", e.ToString());
+                        }
                     }
 
                     // Manage of Socket's Exceptions
@@ -78,11 +85,7 @@ namespace LotteryGame
                     {
                         Console.WriteLine("SocketException : {0}", se.ToString());
                     }
-
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Error in receiving messages from server", e.ToString());
-                    }
+                 
                 }
 
                 catch (Exception e)

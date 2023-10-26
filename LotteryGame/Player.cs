@@ -59,7 +59,7 @@ namespace LotteryGame
                             break;
                         }
                     }
-                    if (!stakeArr.Contains(Convert.ToInt32(uservalue)))
+                    else
                     {
                         Console.WriteLine("Invalid input. Please enter a number betweeon 0 and 20");
                     }
@@ -86,8 +86,7 @@ namespace LotteryGame
             for (int i = 0; i < 6; i++)
             {            
                 Console.WriteLine("Number:" + (i + 1));
-                bool isValidInput = false;
-                while (!isValidInput)
+                while (true)
                 {
                     try
                     {
@@ -102,13 +101,15 @@ namespace LotteryGame
                             if (!range.Contains(userNum))
                             {
                                 Console.WriteLine("Number out of range. Please enter a number betweeon 0 and 20");
+                                continue;
                             }
                             else if (userNums.Contains(userNum))
                             {
                                 Console.WriteLine("Number already entered. Repeated numbers are not allowed. Please try again");
+                                continue;
                             }                         
                         }
-                        if (!range.Contains(Convert.ToInt32(userValue)))
+                        else
                         {
                             Console.WriteLine("Invalid input. Please enter a number betweeon 0 and 20");
                         }

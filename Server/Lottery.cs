@@ -20,7 +20,7 @@ namespace Server
             currentPot = Game.Sqlclass.StoredPot + ServerSetup.client.Userstake;
             GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
             ServerSetup.client.Prize = Prize;
-            Sqlclass.DBgameinsert(ServerSetup.client.UserNums, Sqlclass.callsArr);
+            Sqlclass.DBgameinsert();
             Sqlclass.UpdatePot();
         }
 
