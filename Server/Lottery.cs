@@ -17,17 +17,19 @@ namespace Server
         public void PlayExistingGame()
         {            
             Sqlclass.GetExistingGame();
-            currentPot = Game.Sqlclass.StoredPot + ServerSetup.client.Userstake;
-            GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
-            ServerSetup.client.Prize = Prize;
-            Sqlclass.DBgameinsert();
-            Sqlclass.UpdatePot();
+            lock (Program.Lottery)
+            {
+                currentPot = Game.Sqlclass.StoredPot + ServerSetup.Client.Userstake;
+                GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
+                ServerSetup.client.Prize = Prize;
+                Sqlclass.DBgameinsert();
+                Sqlclass.UpdatePot();
+            }
         }
-
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             byte[] prize = null;
-            Sqlclass.GetExistingGame();
+           
             //prize = Encoding.ASCII.GetBytes(ServerSetup.client.Prize.ToString());
             foreach (Socket socket in ServerSetup.Clients.Keys)
             {
@@ -38,7 +40,7 @@ namespace Server
                 }
                 else if (Program.Lottery.MatchedNumbers == 6)
                 {
-                    ServerSetup.Clients[socket].Prize = Sqlclass.StoredPot;
+                    ServerSetup.Clients[socket].Prize = currentPot;
                     prize = Encoding.ASCII.GetBytes("Congrats you just won the jackpot: £" + ServerSetup.Clients[socket].Prize.ToString());
                     socket.Send(prize);
                 }
