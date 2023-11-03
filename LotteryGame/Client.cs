@@ -14,7 +14,7 @@ namespace LotteryGame
     internal class Client
     {
             // ExecuteClient() Method
-           public  void ExecuteClient()
+           public async Task ExecuteClient()
            {
                 try
                 {

@@ -121,19 +121,19 @@ namespace LotteryGame
                 }
             }
         }
-        public void GetPlayerRequest()
+        public async void GetPlayerRequest()
         {
             GetPlayerName();          
             GetStake();
             GetUserNumbers();
-            SQLclass.DBplayerInsert();
+            await SQLclass.DBplayerInsert();
             if (SQLclass.Duplicate == -1)
             {
                 Console.WriteLine("You already entered this lottery, please wait for a new one");
             }
             else
             {
-                Program.client.ExecuteClient();
+               Program.client.ExecuteClient();
             }
         }
     }

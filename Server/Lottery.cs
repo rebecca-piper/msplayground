@@ -14,23 +14,22 @@ namespace Server
     {  
         double currentPot;
         public double CurrentPot { get => currentPot; set => currentPot = value; }
-        public void PlayExistingGame()
+        public async void PlayExistingGame()
         {            
-            Sqlclass.GetExistingGame();
+            await Sqlclass.GetExistingGame();
             lock (Program.Lottery)
             {
                 currentPot = Game.Sqlclass.StoredPot + ServerSetup.Client.Userstake;
                 GetPrizes(ServerSetup.client.UserNums, Sqlclass.callsArr);
                 ServerSetup.client.Prize = Prize;
-                Sqlclass.DBgameinsert();
-                Sqlclass.UpdatePot();
             }
+            await Sqlclass.DBgameinsert();
+            await Sqlclass.UpdatePot();
         }
-        private void TimerElapsed(object? sender, ElapsedEventArgs e)
+        private async void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             byte[] prize = null;
-           
-            //prize = Encoding.ASCII.GetBytes(ServerSetup.client.Prize.ToString());
+  
             foreach (Socket socket in ServerSetup.Clients.Keys)
             {
                 if (ServerSetup.Clients[socket].Prize == 0)
@@ -40,8 +39,7 @@ namespace Server
                 }
                 else if (Program.Lottery.MatchedNumbers == 6)
                 {
-                    ServerSetup.Clients[socket].Prize = currentPot;
-                    prize = Encoding.ASCII.GetBytes("Congrats you just won the jackpot: £" + ServerSetup.Clients[socket].Prize.ToString());
+                    prize = Encoding.ASCII.GetBytes("Congrats you just won the jackpot: £" + currentPot.ToString());
                     socket.Send(prize);
                 }
                 else
@@ -54,7 +52,7 @@ namespace Server
             }    
             ServerSetup.Clients.Clear();
             GetRandomNumbers(1);
-            Sqlclass.NewLotteryTimer(RandomNums);         
+            await Sqlclass.NewLotteryTimer(RandomNums);         
             Console.WriteLine("New lottery was created at {0:HH:mm:ss.fff}:" + e.SignalTime);
         }
         public void SetTimer()

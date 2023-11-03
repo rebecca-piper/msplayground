@@ -39,7 +39,7 @@ namespace LotteryGame
         public int[] PicksArr { get => picksArr; set => picksArr = value; }
         public int[] CallsArr { get => callsArr; set => callsArr = value; }
 
-        public void DBplayerInsert()
+        public async Task DBplayerInsert()
         {               
             try
             {
@@ -51,7 +51,7 @@ namespace LotteryGame
                         command.Parameters.AddWithValue("@player_username", Program.Player.Playerusername);
                         command.Parameters.Add("@duplicate", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                         duplicate = (int)command.Parameters["@duplicate"].Value;
                      }
                      if (duplicate == -2)
@@ -70,7 +70,7 @@ namespace LotteryGame
             }
             
         }
-        public void PreviewGames()
+        public async Task PreviewGames()
         {  
             try
             {
@@ -87,7 +87,7 @@ namespace LotteryGame
                         command.Parameters.Add("@prizes", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@calls", SqlDbType.VarChar, 30).Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
 
                         playerID = (int)command.Parameters["@player_id"].Value;                       
                         picks = (string)command.Parameters["@picks"].Value;

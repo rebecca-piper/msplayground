@@ -66,7 +66,7 @@ namespace Server
         //        Console.WriteLine("Connection error in inserting game" + e);
         //    }
         //}
-        public void DBgameinsert()
+        public async Task DBgameinsert()
         {
             try
             {
@@ -80,7 +80,7 @@ namespace Server
                         command.Parameters.AddWithValue("@picks", string.Join(",", ServerSetup.client.UserNums));
                         command.Parameters.AddWithValue("@prizes", Program.Lottery.Prize);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -93,7 +93,7 @@ namespace Server
                 Console.WriteLine("Connection error in inserting game" + e);
             }
         }
-        public void GetExistingGame()
+        public async Task GetExistingGame()
         {    
             try
             {
@@ -107,7 +107,7 @@ namespace Server
                         command.Parameters.Add("@pot_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@pot", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                         //lotteryID = (int)command.Parameters["@lottery_id"].Value;
                         calls = (string)command.Parameters["@calls"].Value;
                         storedPot = (int)command.Parameters["@pot"].Value;
@@ -127,7 +127,7 @@ namespace Server
             }
         }
 
-        public void UpdatePot()
+        public async Task UpdatePot()
         {
             try
             {
@@ -138,7 +138,7 @@ namespace Server
                         connection.Open();
                         command.Parameters.AddWithValue("@pot", Program.Lottery.CurrentPot);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -151,7 +151,7 @@ namespace Server
                 Console.WriteLine("Connection error in updating pot" + e);
             }
         }
-        public void NewLotteryTimer(int[] pRandomNumbers)
+        public async Task NewLotteryTimer(int[] pRandomNumbers)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Server
                             connection.Open();
                             command.Parameters.AddWithValue("@calls", string.Join(",", pRandomNumbers));
                             command.CommandType = CommandType.StoredProcedure;
-                            command.ExecuteNonQuery();
+                            await command.ExecuteNonQueryAsync();
                         }
                     }                   
                     catch (SqlException e)
@@ -177,7 +177,7 @@ namespace Server
                         {
                             command.Parameters.AddWithValue("@pot", 0);
                             command.CommandType = CommandType.StoredProcedure;
-                            command.ExecuteNonQuery();
+                            await command.ExecuteNonQueryAsync();
                         }
                     }
                     catch (SqlException e)
