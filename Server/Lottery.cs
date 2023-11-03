@@ -35,7 +35,7 @@ namespace Server
                 if (ServerSetup.Clients[socket].Prize == 0)
                 {
                     byte[] output = Encoding.ASCII.GetBytes("You didn't win anything");
-                    socket.Send(output);
+                    socket.SendAsync(output);
                 }
                 else if (Program.Lottery.MatchedNumbers == 6)
                 {

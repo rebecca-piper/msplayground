@@ -133,7 +133,7 @@ namespace LotteryGame
             }
             else
             {
-               Program.client.ExecuteClient();
+              await Program.client.ExecuteClient();
             }
         }
     }
