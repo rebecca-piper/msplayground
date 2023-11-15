@@ -10,7 +10,7 @@ namespace Server
     {
         private static Lottery lottery = new Lottery();
         public static Lottery Lottery { get => lottery; set => lottery = value; }
-        static async void Main(string[] args)
+        static void Main(string[] args)
         {
             ServerSetup serversetup = new ServerSetup();           
             lottery.SetTimer();
