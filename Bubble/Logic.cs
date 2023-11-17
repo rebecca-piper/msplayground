@@ -22,53 +22,21 @@ namespace Scratch
             Settings.SetVersion();
             TicketDetails = new int[Settings.TicketSize];
 
-            int[] winsymbol = new int[3];
+            int[] winsymbol = new int[9];
             int winsymbol2 = 0;
             int winsymbol3 = 0;
             //for (int i = 0; i < 3; i++)
             //{
 
-            int[] winchance = new int[3];
+            int winchance;
 
-            for (int i = 0; i < winchance.Length; i++)
+            for (int i = Settings.Outcomes.Length; i > 0; i--)
             {
-                winchance[i] = rnd.Next(1, 10000000);
-                if (winchance[i] < Settings.Outcomes[6])
+                winchance = rnd.Next(1, 10000000);
+                if (winchance < Settings.Outcomes[i - 1])
                 {
-                    winsymbol[i] = 7;
-
+                     winsymbol[i] = i;
                 }
-                else if (winchance[i] < Settings.Outcomes[5])
-                {
-                    winsymbol[i] = 6;
-
-                }
-                else if (winchance[i] < Settings.Outcomes[4])
-                {
-                    winsymbol[i] = 5;
-
-                }
-                else if (winchance[i] < Settings.Outcomes[3])
-                {
-                    winsymbol[i] = 4;
-
-                }
-                else if (winchance[i] < Settings.Outcomes[2])
-                {
-                    winsymbol[i] = 3;
-
-                }
-                else if (winchance[i] < Settings.Outcomes[1])
-                {
-                    winsymbol[i] = 2;
-
-                }
-                else if (winchance[i] < Settings.Outcomes[0])
-                {
-                    winsymbol[i] = 1;
-
-                }
-
             }
             Outcome(winsymbol);
             return TicketDetails;
