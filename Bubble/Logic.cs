@@ -17,74 +17,53 @@ namespace Scratch
         public int Prize;
         public int BonusPrize;
         public float Probability;
-        public int[] GetTicket()
+        public void GetSymbols()
         {
             Settings.SetVersion();
-            TicketDetails = new int[Settings.TicketSize];
-
-            int[] winsymbol = new int[9];
-            int winsymbol2 = 0;
-            int winsymbol3 = 0;
-            //for (int i = 0; i < 3; i++)
-            //{
-
+            List<int> winsymbol = new List<int>();
             int winchance;
-
+            int wincount =0;
             for (int i = Settings.Outcomes.Length; i > 0; i--)
             {
                 winchance = rnd.Next(1, 10000000);
                 if (winchance < Settings.Outcomes[i - 1])
                 {
-                     winsymbol[i] = i;
+                   winsymbol.Add(i);
+                   wincount++;
+                }
+                if (wincount >= 3)
+                {
+                   break;
                 }
             }
-            Outcome(winsymbol);
-            return TicketDetails;
+            GettTicket(winsymbol);
         }
 
-        public void Outcome(int[] winsymbol)
+        public void GettTicket(List<int> winsymbol)
         {
-            if (winsymbol[0] != 0)
+            List<int> list = new List<int>();
+            foreach (int symbol in winsymbol)
             {
-                for (int i = 0; i < 3; i++)
+                if(symbol != Settings.BonusSymbol)
                 {
-                    TicketDetails[i] = winsymbol[0];
+                    list.AddRange(Enumerable.Repeat(symbol, Settings.NumberToMatch));
                 }
-
-
-            }
-            if (winsymbol[1] != 0)
-            {
-                for (int i = 3; i < 6; i++)
+                else
                 {
-                    TicketDetails[i] = winsymbol[1];
+                    list.Add(symbol);
                 }
-
-
-
             }
-            if (winsymbol[2] != 0)
-            {
-                for (int i = 6; i < 9; i++)
-                {
-                    TicketDetails[i] = winsymbol[2];
-                }
+            TicketDetails = new int[9];
+            list.CopyTo(TicketDetails);
 
-
-            }
-            for (int j = 0; j < TicketDetails.Length; j++)
+            for (int j = 0; j < Settings.TicketSize; j++)
             {
                 if (TicketDetails[j] == 0)
-                {
                     do
                     {
-                        TicketDetails[j] = rnd.Next(1, 8);
-
-
+                    TicketDetails[j] = rnd.Next(1, 8);
                     }
                     while (TicketDetails.Count(s => s == TicketDetails[j]) > 2);
-                }
-
             }
 
             for (int i = 0; i < TicketDetails.Length; i++)
@@ -100,14 +79,22 @@ namespace Scratch
             float rtp = 0;
             float totalpaidprize = 0;
             float totalstake = 0;
+            float rtpAgain = 0;
+            int bonusgames = 0;
+            int totalbonusprize = 0;
+            float gameCount = 0;
+            float multipliers = 0;
 
-            for (int i = 0; i < 10000; i++)
+            Dictionary<int, long> MultiplierCounts = new Dictionary<int, long>();
+
+            List<int> prizes = new List<int>();
+            for (int i = 1; i < 4000000; i++)
             {
-                List<int> prizes = new List<int>(); ;
-
+                gameCount++;
+                prizes = new List<int>();
                 Request.GetRequest();
-                GetTicket();
-                Console.WriteLine(string.Join(",", TicketDetails));
+                GetSymbols();
+                //Console.WriteLine(string.Join(",", TicketDetails));
                 for (int matchedSymbol = 1; matchedSymbol <= Settings.NumberOfSymbols; matchedSymbol++)
                 {
                     Prize = 0;
@@ -116,30 +103,33 @@ namespace Scratch
                     {
                         Prize = Settings.WinMultipliers[matchedSymbol - 1] * Request.Stake;
                         Request.Balance = Request.Balance + Prize;
+                        multipliers += Settings.WinMultipliers[matchedSymbol - 1];
                     }
                     prizes.Add(Prize);
                 }
-
-
-                Console.WriteLine($"Prize: {prizes.Sum()}");
-                totalpaidprize = totalpaidprize + prizes.Sum();
-                totalstake = totalstake + Request.Stake;
+                
+                totalpaidprize += prizes.Sum();
+                totalstake += Request.Stake;
                 rtp = totalpaidprize / totalstake * 100;
+                rtpAgain = multipliers / gameCount * 100;
 
+                bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
+                if (bonus)
+                {
+                    bonusgames++;
+                    int SpinOutcome = rnd.Next(1, Settings.BonusSymbolSize);
+                    BonusPrize = Settings.BonusWinMultipliers[SpinOutcome - 1] * Request.Stake;
 
-                //rtp = multiplier * (Probability) * 100;
-                //rtpperc = rtpperc + rtp;
+                    totalbonusprize = totalbonusprize + BonusPrize;
 
-                Console.WriteLine($"Balance: {Request.Balance}");
-                Console.WriteLine($"RTP: {rtp.ToString("F")}");
+                }
             }
-            bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
-            if (bonus)
-            {
-                int SpinOutcome = rnd.Next(1, Settings.BonusSymbolSize);
-                BonusPrize = Settings.BonusWinMultipliers[SpinOutcome - 1] * Request.Stake;
-                Console.WriteLine($"Bonus Prize: {Prize}");
-            }
+            Console.WriteLine($"Bonus Prize: {BonusPrize}");
+            Console.WriteLine($"Prize: {totalpaidprize}");//{prizes.Sum()}");
+            Console.WriteLine($"Stake: {totalstake}");
+            Console.WriteLine($"Balance: {Request.Balance}");
+            Console.WriteLine($"RTP: {rtp.ToString("F")} or {rtpAgain.ToString("F")}");
+            Console.WriteLine($"Bonus Prize Average: {totalbonusprize / bonusgames} {bonusgames}");
         }
     }
 

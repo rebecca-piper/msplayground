@@ -22,11 +22,11 @@ namespace Scratch
             NumberOfSymbols = 8;
             NumberToMatch = 3;
             TicketSize = 9;
-            WinMultipliers = new int[] {1, 2, 10, 20, 50, 500, 0};
-            Outcomes = new int[] { 2025100, 1024454, 327500, 100000, 7020, 200, 50000 };
+            WinMultipliers = new int[] {1, 2, 5, 10, 20, 50, 500, 0};
+            Outcomes = new int[] { 2025100, 1024454, 100000, 400000, 38750, 7020, 200, 60000 };
 
             BonusSymbol = 8;
-            BonusWinMultipliers = new int[] { 4, 16, 40, 120, 240, 540};
+            BonusWinMultipliers = new int[] { 8, 32, 80, 240, 480, 1080};
             BonusSymbolSize = 6;
         }
     }
