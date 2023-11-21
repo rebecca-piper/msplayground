@@ -26,7 +26,7 @@ namespace Scratch
             Outcomes = new int[] { 2025100, 1024454, 100000, 400000, 38750, 7020, 200, 60000 };
 
             BonusSymbol = 8;
-            BonusWinMultipliers = new int[] { 8, 32, 80, 240, 480, 1080};
+            BonusWinMultipliers = new int[] { 4, 16, 40, 120, 240, 540};
             BonusSymbolSize = 6;
         }
     }

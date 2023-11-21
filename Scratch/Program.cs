@@ -8,7 +8,7 @@ namespace Scratch
         {
             
             Logic logic = new Logic();
-        
+
             logic.PlayGame();
 
         }

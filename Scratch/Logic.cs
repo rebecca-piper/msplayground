@@ -16,7 +16,6 @@ namespace Scratch
         Random rnd = new Random();
         public int Prize;
         public int BonusPrize;
-        public float Probability;
         public void GetSymbols()
         {
             Settings.SetVersion();
@@ -76,11 +75,11 @@ namespace Scratch
         }
         public void PlayGame()
         {
-            float rtp = 0;
-            float totalpaidprize = 0;
-            float totalstake = 0;
+            decimal rtp = 0;
+            decimal totalpaidprize = 0;
+            decimal totalstake = 0;
             float rtpAgain = 0;
-            int bonusgames = 0;
+            int bonusgames = 1;
             int totalbonusprize = 0;
             float gameCount = 0;
             float multipliers = 0;
@@ -88,8 +87,9 @@ namespace Scratch
             Dictionary<int, long> MultiplierCounts = new Dictionary<int, long>();
 
             List<int> prizes = new List<int>();
-            for (int i = 1; i < 4000000; i++)
+            for (int i = 1; i <= 10000000; i++)
             {
+                //Console.ReadLine();
                 gameCount++;
                 prizes = new List<int>();
                 Request.GetRequest();
@@ -110,26 +110,25 @@ namespace Scratch
                 
                 totalpaidprize += prizes.Sum();
                 totalstake += Request.Stake;
-                rtp = totalpaidprize / totalstake * 100;
+                rtp = (totalpaidprize / totalstake) * 100;
                 rtpAgain = multipliers / gameCount * 100;
 
                 bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
                 if (bonus)
                 {
                     bonusgames++;
-                    int SpinOutcome = rnd.Next(1, Settings.BonusSymbolSize);
-                    BonusPrize = Settings.BonusWinMultipliers[SpinOutcome - 1] * Request.Stake;
-
+                    int SpinOutcome = rnd.Next(0, Settings.BonusSymbolSize);
+                    BonusPrize = Settings.BonusWinMultipliers[SpinOutcome] * Request.Stake;
                     totalbonusprize = totalbonusprize + BonusPrize;
-
                 }
             }
-            Console.WriteLine($"Bonus Prize: {BonusPrize}");
-            Console.WriteLine($"Prize: {totalpaidprize}");//{prizes.Sum()}");
-            Console.WriteLine($"Stake: {totalstake}");
+            Console.WriteLine($"Ticket: {string.Join(",", TicketDetails)}");
+            Console.WriteLine($"Total Prize: {totalpaidprize}");
+            Console.WriteLine($"Total Stake: {totalstake}");
             Console.WriteLine($"Balance: {Request.Balance}");
-            Console.WriteLine($"RTP: {rtp.ToString("F")} or {rtpAgain.ToString("F")}");
-            Console.WriteLine($"Bonus Prize Average: {totalbonusprize / bonusgames} {bonusgames}");
+            Console.WriteLine($"RTP: {rtp.ToString("F10")} or {rtpAgain.ToString("F10")}");
+            Console.WriteLine($"Bonus Prize Average: {totalbonusprize / bonusgames}");
+
         }
     }
 
