@@ -14,6 +14,7 @@ namespace Scratch
         public int[] WinMultipliers;
         public int[] BonusWinMultipliers;
         public int[] Outcomes;
+        public int[] BonusWinOutcomes;
         public int BonusSymbol;
         public int BonusSymbolSize;
        
@@ -26,8 +27,9 @@ namespace Scratch
             Outcomes = new int[] { 900, 2300, 1500, 400, 4600, 5250, 6857, 750000 };
 
             BonusSymbol = 8;
-            BonusWinMultipliers = new int[] { 2, 4, 6, 8, 12, 16 };
-            BonusSymbolSize = 6;
+            BonusWinMultipliers = new int[] {4, 6, 10, 14, 14};
+            BonusWinOutcomes = new int[] {262500, 187500, 150000, 93750, 75000};
+            BonusSymbolSize = 5;
         }
     }
 }

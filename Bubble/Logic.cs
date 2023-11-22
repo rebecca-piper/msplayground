@@ -18,6 +18,7 @@ namespace Scratch
         Random Rnd = new Random();
         public int Prize;
         public int BonusPrize;
+        List<int> BonusSymbolWin = new List<int>();
         public Dictionary<int, int> Outcomes = new Dictionary<int,int>();
         int Counter = 0;
         
@@ -113,7 +114,7 @@ namespace Scratch
             decimal multipliers = 0;
             List<int> prizes = new List<int>();
            
-            for (int i = 1; i <= 1000000; i++)
+            for (int i = 1; i <= 10000000; i++)
             {
                 //Console.ReadLine();
                 
@@ -142,9 +143,50 @@ namespace Scratch
                 bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
                 if (bonus)
                 {
+                    BonusSymbolWin = new List<int>();
                     bonusgames++;
-                    int SpinOutcome = Rnd.Next(0, Settings.BonusSymbolSize);
-                    BonusPrize = Settings.BonusWinMultipliers[SpinOutcome] * Request.Stake;
+                    
+                    int[] reel1 = new int[3];
+                    int[] reel2 = new int[3]; 
+                    int[] reel3 = new int[3];
+
+                    FillReel(reel1);
+                    FillReel(reel3);
+                  
+                    int wincount = 0;
+                    for (int j = Settings.BonusWinOutcomes.Length; j > 0; j--)
+                    {
+                        int winchance = Rnd.Next(1, 70000);
+                        if (winchance < Settings.BonusWinOutcomes[j - 1])
+                        {
+                            BonusSymbolWin.Add(j);
+                            wincount++;
+                            //Outcomes.TryGetValue(i, out Counter);
+                            //Outcomes[i] += 1;
+                        }
+                        if (wincount == 1)
+                        {
+                            break;
+                        }
+                    }
+                    if (BonusSymbolWin.Count > 0)
+                    {
+                        foreach (int symbol in BonusSymbolWin)
+                        {
+                            reel2 = new int[] { symbol, symbol, symbol };
+                        }
+                        BonusPrize = Settings.BonusWinMultipliers[reel2[0] - 1] * Request.Stake;
+                    }
+                    else
+                    {
+                        FillReel(reel2);
+                    }
+                    //Console.WriteLine($"{string.Join(",", reel1)}");
+                    //Console.WriteLine($"{string.Join(",", reel2)}");
+                    //Console.WriteLine($"{string.Join(",", reel3)}");
+
+                    //int SpinOutcome = Rnd.Next(0, Settings.BonusSymbolSize);
+                    //BonusPrize = Settings.BonusWinMultipliers[SpinOutcome] * Request.Stake;
                     totalbonusprize = totalbonusprize + BonusPrize;
                     totalpaidprize += BonusPrize;
                 }
@@ -154,10 +196,28 @@ namespace Scratch
             Console.WriteLine($"Total Stake: {totalstake}");
             Console.WriteLine($"Balance: {Request.Balance}");
             Console.WriteLine($"RTP: {rtp.ToString("F7")} or {rtpAgain.ToString("F5")}");
-            Console.WriteLine($"Total outcomes: {gameCount}");
+            Console.WriteLine($"Bonus prize av: {totalbonusprize / bonusgames}");
             foreach (var val in Outcomes.Values)
             {
                 Console.WriteLine(val);
+            }
+            
+        }
+        public void FillReel(int[] reel)
+        {
+            List<int> bonusSymbols = new List<int>(BonusSymbolWin);
+            for (int j = 1; j <= Settings.BonusSymbolSize; j++)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    bonusSymbols.Add(j);
+                }
+
+            }
+            Shuffle(bonusSymbols);
+            for (int i =0; i < reel.Length; i++)
+            {
+                reel[i] = bonusSymbols[i];
             }
         }
     }
