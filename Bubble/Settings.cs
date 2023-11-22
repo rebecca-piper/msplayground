@@ -23,10 +23,10 @@ namespace Scratch
             NumberToMatch = 3;
             TicketSize = 9;
             WinMultipliers = new int[] {1, 2, 5, 10, 20, 50, 500, 0};
-            Outcomes = new int[] { 2025100, 1024454, 100000, 400000, 38750, 7020, 200, 30000 };
+            Outcomes = new int[] { 900, 2300, 1500, 400, 4600, 5250, 6857, 750000 };
 
             BonusSymbol = 8;
-            BonusWinMultipliers = new int[] { 2, 4, 6, 8, 12, 16};
+            BonusWinMultipliers = new int[] { 2, 4, 6, 8, 12, 16 };
             BonusSymbolSize = 6;
         }
     }
