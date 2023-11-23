@@ -18,7 +18,7 @@ namespace Scratch
         Random Rnd = new Random();
         public int Prize;
         public int BonusPrize;
-        List<int> BonusSymbolWin = new List<int>();
+        List<int> BonusWinSymbol = new List<int>();
         public Dictionary<int, int> Outcomes = new Dictionary<int,int>();
         int Counter = 0;
         
@@ -143,23 +143,22 @@ namespace Scratch
                 bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
                 if (bonus)
                 {
-                    BonusSymbolWin = new List<int>();
+                    BonusWinSymbol = new List<int>();
                     bonusgames++;
                     
                     int[] reel1 = new int[3];
                     int[] reel2 = new int[3]; 
                     int[] reel3 = new int[3];
+                    
 
-                    FillReel(reel1);
-                    FillReel(reel3);
-                  
+
                     int wincount = 0;
                     for (int j = Settings.BonusWinOutcomes.Length; j > 0; j--)
                     {
-                        int winchance = Rnd.Next(1, 70000);
+                        int winchance = Rnd.Next(1, 700000);
                         if (winchance < Settings.BonusWinOutcomes[j - 1])
                         {
-                            BonusSymbolWin.Add(j);
+                            BonusWinSymbol.Add(j);
                             wincount++;
                             //Outcomes.TryGetValue(i, out Counter);
                             //Outcomes[i] += 1;
@@ -169,21 +168,23 @@ namespace Scratch
                             break;
                         }
                     }
-                    if (BonusSymbolWin.Count > 0)
+                    if (wincount == 1)
                     {
-                        foreach (int symbol in BonusSymbolWin)
+                        foreach (int symbol in BonusWinSymbol)
                         {
-                            reel2 = new int[] { symbol, symbol, symbol };
+                            reel1[1] = symbol; 
+                            reel2[1] = symbol;
+                            reel3[1] = symbol;
                         }
-                        BonusPrize = Settings.BonusWinMultipliers[reel2[0] - 1] * Request.Stake;
+                        BonusPrize = Settings.BonusWinMultipliers[BonusWinSymbol[0] - 1] * Request.Stake;
                     }
-                    else
-                    {
-                        FillReel(reel2);
-                    }
-                    //Console.WriteLine($"{string.Join(",", reel1)}");
-                    //Console.WriteLine($"{string.Join(",", reel2)}");
-                    //Console.WriteLine($"{string.Join(",", reel3)}");
+                    FillReel(reel1);
+                    FillReel(reel2);
+                    FillReel(reel3);
+                    
+                    Console.WriteLine($"{string.Join(",", reel1[0], reel2[0], reel3[0])}");
+                    Console.WriteLine($"{string.Join(",", reel1[1], reel2[1], reel3[1])}");
+                    Console.WriteLine($"{string.Join(",", reel1[2], reel2[2], reel3[2])}");
 
                     //int SpinOutcome = Rnd.Next(0, Settings.BonusSymbolSize);
                     //BonusPrize = Settings.BonusWinMultipliers[SpinOutcome] * Request.Stake;
@@ -205,19 +206,23 @@ namespace Scratch
         }
         public void FillReel(int[] reel)
         {
-            List<int> bonusSymbols = new List<int>(BonusSymbolWin);
+            
+            List<int> bonusSymbols = new List<int>();
             for (int j = 1; j <= Settings.BonusSymbolSize; j++)
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    bonusSymbols.Add(j);
-                }
-
+                  for (int i = 0; i < 2; i++)
+                  {
+                       bonusSymbols.Add(j);
+                  }
             }
             Shuffle(bonusSymbols);
             for (int i =0; i < reel.Length; i++)
             {
-                reel[i] = bonusSymbols[i];
+                if (reel[i] == 0)
+                {
+                    reel[i] = bonusSymbols[i];
+                }
+                 
             }
         }
     }
