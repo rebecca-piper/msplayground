@@ -149,9 +149,8 @@ namespace Scratch
                     int[] reel1 = new int[3];
                     int[] reel2 = new int[3]; 
                     int[] reel3 = new int[3];
-                    
-
-
+                    int[] winline = new int[3] { 0, 1, 2 };
+                    int[][] reels = new int[3][] {reel1, reel2, reel3};
                     int wincount = 0;
                     for (int j = Settings.BonusWinOutcomes.Length; j > 0; j--)
                     {
@@ -171,16 +170,17 @@ namespace Scratch
                     if (wincount == 1)
                     {
                         foreach (int symbol in BonusWinSymbol)
-                        {
-                            reel1[1] = symbol; 
-                            reel2[1] = symbol;
-                            reel3[1] = symbol;
+                        {                          
+                            for (int m = 0; m < reels.Length; m++)
+                            {
+                                reels[m][winline[m]] = symbol;
+                            }
+  
                         }
                         BonusPrize = Settings.BonusWinMultipliers[BonusWinSymbol[0] - 1] * Request.Stake;
                     }
-                    FillReel(reel1);
-                    FillReel(reel2);
-                    FillReel(reel3);
+                    FillReel(reels);
+ 
                     
                     Console.WriteLine($"{string.Join(",", reel1[0], reel2[0], reel3[0])}");
                     Console.WriteLine($"{string.Join(",", reel1[1], reel2[1], reel3[1])}");
@@ -196,7 +196,7 @@ namespace Scratch
             Console.WriteLine($"Total Prize: {totalpaidprize}");
             Console.WriteLine($"Total Stake: {totalstake}");
             Console.WriteLine($"Balance: {Request.Balance}");
-            Console.WriteLine($"RTP: {rtp.ToString("F7")} or {rtpAgain.ToString("F5")}");
+            Console.WriteLine($"RTP: {rtp.ToString("F10")} or {rtpAgain.ToString("F5")}");
             Console.WriteLine($"Bonus prize av: {totalbonusprize / bonusgames}");
             foreach (var val in Outcomes.Values)
             {
@@ -204,7 +204,7 @@ namespace Scratch
             }
             
         }
-        public void FillReel(int[] reel)
+        public void FillReel(int[][] reels)
         {
             
             List<int> bonusSymbols = new List<int>();
@@ -216,13 +216,12 @@ namespace Scratch
                   }
             }
             Shuffle(bonusSymbols);
-            for (int i =0; i < reel.Length; i++)
+            for (int i =0; i < reels.Length; i++)
             {
-                if (reel[i] == 0)
+                if (reels[i][i] == 0)
                 {
-                    reel[i] = bonusSymbols[i];
-                }
-                 
+                    reels[i][i] = bonusSymbols[i];
+                }                 
             }
         }
     }
