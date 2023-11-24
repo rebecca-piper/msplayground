@@ -143,60 +143,41 @@ namespace Scratch
                 bool bonus = TicketDetails.Contains(Settings.BonusSymbol);
                 if (bonus)
                 {
-                    BonusWinSymbol = new List<int>();
+                    List<int> bonusprizes = new List<int>();
                     bonusgames++;
-                    
-                    int[] reel1 = new int[3];
-                    int[] reel2 = new int[3]; 
-                    int[] reel3 = new int[3];
-                    int[] winline = new int[3] { 0, 1, 2 };
-                    int[][] reels = new int[3][] {reel1, reel2, reel3};
-                    int wincount = 0;
-                    for (int j = Settings.BonusWinOutcomes.Length; j > 0; j--)
+                    for (int l = 0; l < Settings.Reels.Length; l++)
                     {
-                        int winchance = Rnd.Next(1, 700000);
-                        if (winchance < Settings.BonusWinOutcomes[j - 1])
-                        {
-                            BonusWinSymbol.Add(j);
-                            wincount++;
-                            //Outcomes.TryGetValue(i, out Counter);
-                            //Outcomes[i] += 1;
-                        }
-                        if (wincount == 1)
-                        {
-                            break;
-                        }
+                        int stop = Rnd.Next(0, Settings.Reels[l].Length - 2);
+                        Settings.Reels[l] = new int[] { Settings.Reels[l][stop], Settings.Reels[l][stop + 1], Settings.Reels[l][stop + 2] };
                     }
-                    if (wincount == 1)
+                    foreach(var winline in Settings.Winlines)
                     {
-                        foreach (int symbol in BonusWinSymbol)
-                        {                          
-                            for (int m = 0; m < reels.Length; m++)
-                            {
-                                reels[m][winline[m]] = symbol;
-                            }
-  
-                        }
-                        BonusPrize = Settings.BonusWinMultipliers[BonusWinSymbol[0] - 1] * Request.Stake;
-                    }
-                    FillReel(reels);
- 
-                    
-                    Console.WriteLine($"{string.Join(",", reel1[0], reel2[0], reel3[0])}");
-                    Console.WriteLine($"{string.Join(",", reel1[1], reel2[1], reel3[1])}");
-                    Console.WriteLine($"{string.Join(",", reel1[2], reel2[2], reel3[2])}");
+                        List<int> line = new List<int>();
+                        for (int m = 0; m < winline.Length; m++)
+                            line.Add(Settings.Reels[m][winline[m]]);
 
-                    //int SpinOutcome = Rnd.Next(0, Settings.BonusSymbolSize);
-                    //BonusPrize = Settings.BonusWinMultipliers[SpinOutcome] * Request.Stake;
-                    totalbonusprize = totalbonusprize + BonusPrize;
-                    totalpaidprize += BonusPrize;
+                        bool isAllEqual = line.TrueForAll(x => x.Equals(line.First()));
+                        if (isAllEqual)
+                        {
+
+                            BonusPrize = Settings.BonusWinMultipliers[line[0] - 1] * Request.Stake;
+                        }                        
+                        bonusprizes.Add(BonusPrize);
+                    }
+                  
+
+                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][0], Settings.Reels[1][0], Settings.Reels[2][0])}");
+                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][1], Settings.Reels[1][1], Settings.Reels[2][1])}");
+                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][2], Settings.Reels[1][2], Settings.Reels[2][2])}");
+                    totalbonusprize += bonusprizes.Sum();
+                    totalpaidprize += bonusprizes.Sum();
                 }
             }
             Console.WriteLine($"Ticket: {string.Join(",", TicketDetails)}");
             Console.WriteLine($"Total Prize: {totalpaidprize}");
             Console.WriteLine($"Total Stake: {totalstake}");
             Console.WriteLine($"Balance: {Request.Balance}");
-            Console.WriteLine($"RTP: {rtp.ToString("F10")} or {rtpAgain.ToString("F5")}");
+            Console.WriteLine($"RTP: {rtp.ToString("F10")}");
             Console.WriteLine($"Bonus prize av: {totalbonusprize / bonusgames}");
             foreach (var val in Outcomes.Values)
             {
@@ -204,26 +185,26 @@ namespace Scratch
             }
             
         }
-        public void FillReel(int[][] reels)
-        {
+        //public void FillReel(int[][] reels)
+        //{
             
-            List<int> bonusSymbols = new List<int>();
-            for (int j = 1; j <= Settings.BonusSymbolSize; j++)
-            {
-                  for (int i = 0; i < 2; i++)
-                  {
-                       bonusSymbols.Add(j);
-                  }
-            }
-            Shuffle(bonusSymbols);
-            for (int i =0; i < reels.Length; i++)
-            {
-                if (reels[i][i] == 0)
-                {
-                    reels[i][i] = bonusSymbols[i];
-                }                 
-            }
-        }
+        //    List<int> bonusSymbols = new List<int>();
+        //    for (int j = 1; j <= Settings.BonusSymbolSize; j++)
+        //    {
+        //          for (int i = 0; i < 2; i++)
+        //          {
+        //               bonusSymbols.Add(j);
+        //          }
+        //    }
+        //    Shuffle(bonusSymbols);
+        //    for (int i =0; i < reels.Length; i++)
+        //    {
+        //        if (reels[i][i] == 0)
+        //        {
+        //            reels[i][i] = bonusSymbols[i];
+        //        }                 
+        //    }
+        //}
     }
 
 }
