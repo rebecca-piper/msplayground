@@ -153,22 +153,46 @@ namespace Scratch
                     foreach(var winline in Settings.Winlines)
                     {
                         List<int> line = new List<int>();
-                        for (int m = 0; m < winline.Length; m++)
-                            line.Add(Settings.Reels[m][winline[m]]);
+                        for (int l = 0; l < winline.Length; l++)
+                            line.Add(Settings.Reels[l][winline[l]]);
 
-                        bool isAllEqual = line.TrueForAll(x => x.Equals(line.First()));
-                        if (isAllEqual)
+                        //BonusPrize = 0;
+                        //bool isAllEqual = line.TrueForAll(x => x.Equals(line.First()));
+                        //if (isAllEqual)
+                        //{
+
+                        //    BonusPrize = Settings.BonusWinMultipliers[line[0] - 1] * Request.Stake;
+                        //}
+                        //bonusprizes.Add(BonusPrize);
+                        int wildsymbolcount = 0;
+                        int symbol = 0;
+                        for (int l = 0; l < line.Count; l++)
                         {
-
-                            BonusPrize = Settings.BonusWinMultipliers[line[0] - 1] * Request.Stake;
-                        }                        
-                        bonusprizes.Add(BonusPrize);
+                            if (line[l] == Settings.WildSymbol)
+                            {
+                                wildsymbolcount++;
+                            }                       
+                            else
+                            {
+                                symbol = line[l];
+                            }
+                        }
+                        BonusPrize = 0;
+                        int count = line.Count(x => x == symbol);
+                        if (count + wildsymbolcount == Settings.NumberToMatch)
+                        {
+                            if (wildsymbolcount == Settings.NumberToMatch)
+                                BonusPrize = Settings.BonusWinMultipliers[Settings.WildSymbol - 1] * Request.Stake;
+                            else
+                                BonusPrize = Settings.BonusWinMultipliers[symbol - 1] * Request.Stake;
+                        }
+                           bonusprizes.Add(BonusPrize);                        
                     }
                   
 
-                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][0], Settings.Reels[1][0], Settings.Reels[2][0])}");
-                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][1], Settings.Reels[1][1], Settings.Reels[2][1])}");
-                    Console.WriteLine($"{string.Join(",", Settings.Reels[0][2], Settings.Reels[1][2], Settings.Reels[2][2])}");
+                    //Console.WriteLine($"{string.Join(",", Settings.Reels[0][0], Settings.Reels[1][0], Settings.Reels[2][0])}");
+                    //Console.WriteLine($"{string.Join(",", Settings.Reels[0][1], Settings.Reels[1][1], Settings.Reels[2][1])}");
+                    //Console.WriteLine($"{string.Join(",", Settings.Reels[0][2], Settings.Reels[1][2], Settings.Reels[2][2])}");
                     totalbonusprize += bonusprizes.Sum();
                     totalpaidprize += bonusprizes.Sum();
                 }
@@ -185,26 +209,5 @@ namespace Scratch
             }
             
         }
-        //public void FillReel(int[][] reels)
-        //{
-            
-        //    List<int> bonusSymbols = new List<int>();
-        //    for (int j = 1; j <= Settings.BonusSymbolSize; j++)
-        //    {
-        //          for (int i = 0; i < 2; i++)
-        //          {
-        //               bonusSymbols.Add(j);
-        //          }
-        //    }
-        //    Shuffle(bonusSymbols);
-        //    for (int i =0; i < reels.Length; i++)
-        //    {
-        //        if (reels[i][i] == 0)
-        //        {
-        //            reels[i][i] = bonusSymbols[i];
-        //        }                 
-        //    }
-        //}
     }
-
 }
