@@ -156,39 +156,28 @@ namespace Scratch
                         for (int l = 0; l < winline.Length; l++)
                             line.Add(Settings.Reels[l][winline[l]]);
 
-                        //BonusPrize = 0;
-                        //bool isAllEqual = line.TrueForAll(x => x.Equals(line.First()));
-                        //if (isAllEqual)
-                        //{
-
-                        //    BonusPrize = Settings.BonusWinMultipliers[line[0] - 1] * Request.Stake;
-                        //}
-                        //bonusprizes.Add(BonusPrize);
                         int wildsymbolcount = 0;
                         int symbol = 0;
+                        BonusPrize = 0;
                         for (int l = 0; l < line.Count; l++)
                         {
                             if (line[l] == Settings.WildSymbol)
-                            {
-                                wildsymbolcount++;
-                            }                       
+                                wildsymbolcount++;              
                             else
-                            {
                                 symbol = line[l];
-                            }
                         }
-                        BonusPrize = 0;
-                        int count = line.Count(x => x == symbol);
-                        if (count + wildsymbolcount == Settings.NumberToMatch)
+                        
+                     
+                        if (wildsymbolcount == Settings.NumberToMatch)
+                            BonusPrize = Settings.BonusWinMultipliers[Settings.WildSymbol - 1] * Request.Stake;
+                        else
                         {
-                            if (wildsymbolcount == Settings.NumberToMatch)
-                                BonusPrize = Settings.BonusWinMultipliers[Settings.WildSymbol - 1] * Request.Stake;
-                            else
-                                BonusPrize = Settings.BonusWinMultipliers[symbol - 1] * Request.Stake;
+                           int count = line.Count(x => x == symbol);
+                           if (count + wildsymbolcount == Settings.NumberToMatch)
+                               BonusPrize = Settings.BonusWinMultipliers[symbol - 1] * Request.Stake;
                         }
-                           bonusprizes.Add(BonusPrize);                        
-                    }
-                  
+                        bonusprizes.Add(BonusPrize);                        
+                    }                
 
                     //Console.WriteLine($"{string.Join(",", Settings.Reels[0][0], Settings.Reels[1][0], Settings.Reels[2][0])}");
                     //Console.WriteLine($"{string.Join(",", Settings.Reels[0][1], Settings.Reels[1][1], Settings.Reels[2][1])}");
