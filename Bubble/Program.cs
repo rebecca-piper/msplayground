@@ -9,8 +9,8 @@ namespace Scratch
             
             Logic logic = new Logic();
             logic.dict();
-            logic.PlayGame();
-
+            //logic.PlayGame();
+            logic.BonusGame();
         }
     }
 }
